@@ -15,7 +15,7 @@ public class Login extends JFrame {
 	private int posX=0;
 	private int	posY=0;
 	private JTextField txtUsername;
-	private JTextField textField;
+	private JPasswordField pwdPassword;
 	
 	public Login() {
 		setBounds(new Rectangle(100, 100, 1280, 720));
@@ -31,6 +31,12 @@ public class Login extends JFrame {
 		getContentPane().add(panel);
 		panel.setLayout(null);
 		panel.setOpaque(false);
+		
+		JLabel lblNewLabel_1 = new JLabel("Password");
+		lblNewLabel_1.setForeground(Color.WHITE);
+		lblNewLabel_1.setFont(new Font("Lato", Font.BOLD, 13));
+		lblNewLabel_1.setBounds(734, 417, 66, 14);
+		panel.add(lblNewLabel_1);
 		
 		JButton btnSignUp = new JButton("Sign up");
 		btnSignUp.setMargin(new Insets(20, 2, 20, 2));
@@ -85,21 +91,30 @@ public class Login extends JFrame {
 		separator_1.setBounds(734, 449, 477, 2);
 		panel.add(separator_1);
 		
-		textField = new HintTextField("Password");
-		textField.setOpaque(false);
-		textField.setMargin(new Insets(2, 20, 2, 2));
-		textField.setHorizontalAlignment(SwingConstants.LEFT);
-		textField.setForeground(Color.WHITE);
-		textField.setFont(new Font("Lato", Font.BOLD, 13));
-		textField.setDisabledTextColor(Color.WHITE);
-		textField.setColumns(10);
-		textField.setCaretColor(Color.GRAY);
-		textField.setBorder(null);
-		textField.setBackground(Color.DARK_GRAY);
-		textField.setBounds(734, 399, 477, 52);
-		panel.add(textField);
+		pwdPassword = new JPasswordField();
+		pwdPassword.setBorder(null);
+		pwdPassword.setForeground(Color.WHITE);
+		pwdPassword.setFont(new Font("Lato", Font.BOLD, 13));
+		pwdPassword.setOpaque(false);
+		pwdPassword.setBounds(734, 399, 477, 52);
+		panel.add(pwdPassword);	
 		
-		
+		pwdPassword.addFocusListener(new FocusListener() { // Text hint para la contraseña
+
+		  @Override
+		  public void focusGained(FocusEvent e) {
+			   lblNewLabel_1.setVisible(false);
+		  }
+		  @Override
+		  
+		  public void focusLost(FocusEvent e) {
+			  if(pwdPassword.getPassword().length == 0) {
+				  lblNewLabel_1.setVisible(true);
+			  }
+		  }
+			
+			
+		});
 		
 		JLabel label = new JLabel("");
 		label.setIcon(new ImageIcon(Login.class.getResource("/src/main/resources/AppLogin.png")));
@@ -169,6 +184,7 @@ class HintTextField extends JTextField implements FocusListener {
 	    return showingHint ? "" : super.getText();
 	  }
 }
+
 
 class RoundedBorder implements Border {
 
