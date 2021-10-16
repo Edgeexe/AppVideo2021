@@ -19,6 +19,7 @@ public class Login extends JFrame {
 	
 	public Login() {
 		setBounds(new Rectangle(100, 100, 1280, 720));
+		setLocationRelativeTo(null);
 		setUndecorated(true);
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -109,7 +110,6 @@ public class Login extends JFrame {
 		txtUsername.setDisabledTextColor(Color.WHITE);
 		txtUsername.setBorder(null);
 		txtUsername.setBackground(Color.DARK_GRAY);
-		txtUsername.setText("Username");
 		txtUsername.setBounds(734, 317, 477, 52);
 		panel.add(txtUsername);
 		txtUsername.setColumns(10);	
