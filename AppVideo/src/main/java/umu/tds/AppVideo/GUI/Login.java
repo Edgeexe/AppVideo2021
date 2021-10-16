@@ -8,6 +8,8 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class Login extends JFrame {
 
@@ -32,6 +34,7 @@ public class Login extends JFrame {
 		panel.setLayout(null);
 		panel.setOpaque(false);
 		
+		
 		JLabel lblNewLabel_1 = new JLabel("Password");
 		lblNewLabel_1.setForeground(Color.WHITE);
 		lblNewLabel_1.setFont(new Font("Lato", Font.BOLD, 13));
@@ -39,6 +42,16 @@ public class Login extends JFrame {
 		panel.add(lblNewLabel_1);
 		
 		JButton btnSignUp = new JButton("Sign up");
+		btnSignUp.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(e.getButton()==MouseEvent.BUTTON1) {
+					JFrame ventana2=new SingUp();
+					ventana2.setVisible(true);
+					setVisible(false);
+				}
+			}
+		});
 		btnSignUp.setMargin(new Insets(20, 2, 20, 2));
 		btnSignUp.setHorizontalTextPosition(SwingConstants.CENTER);
 		btnSignUp.setFont(new Font("Lato", Font.BOLD, 17));
@@ -59,6 +72,23 @@ public class Login extends JFrame {
 		btnNewButton.setBounds(759, 479, 180, 64);
 		btnNewButton.setFocusable(false);
 		panel.add(btnNewButton);
+		
+		JButton boton_X = new JButton("X");
+		boton_X.setContentAreaFilled(false);
+		boton_X.setBorder(null);
+		boton_X.setBorderPainted(false);
+		boton_X.setForeground(Color.WHITE);
+		boton_X.setFont(new Font("Dialog", Font.BOLD, 30));
+		boton_X.setBorder(null);
+		boton_X.setBounds(1211, 11, 31, 34);
+		boton_X.setFocusable(false);
+		panel.add(boton_X);
+		
+		boton_X.addMouseListener(new MouseAdapter(){
+			public void mouseClicked(MouseEvent evento) {
+				if(evento.getButton()==MouseEvent.BUTTON1)System.exit(0);
+			}
+		});
 	
 		
 		JLabel lblNewLabel = new JLabel("New label");
