@@ -1,6 +1,5 @@
 package umu.tds.AppVideo.GUI;
 
-import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
@@ -10,12 +9,11 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
-import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.JButton;
 
-public class SingUp extends JFrame {
+public class SignUp extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private int posX=0;
@@ -37,7 +35,7 @@ public class SingUp extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					SingUp frame = new SingUp();
+					SignUp frame = new SignUp();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -49,7 +47,7 @@ public class SingUp extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public SingUp() {
+	public SignUp() {
 		
 		setBounds(new Rectangle(100, 100, 750, 500));
 		setUndecorated(true);

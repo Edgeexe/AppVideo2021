@@ -8,8 +8,6 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 public class Login extends JFrame {
 
@@ -46,7 +44,7 @@ public class Login extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if(e.getButton()==MouseEvent.BUTTON1) {
-					JFrame ventana2=new SingUp();
+					JFrame ventana2=new SignUp();
 					ventana2.setVisible(true);
 					setVisible(false);
 				}
