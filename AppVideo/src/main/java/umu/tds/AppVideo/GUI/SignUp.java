@@ -11,12 +11,16 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+
+import com.k33ptoo.components.KButton;
+
 import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.JButton;
 import javax.swing.ImageIcon;
 import java.awt.Color;
 import javax.swing.JSeparator;
+import java.awt.SystemColor;
 
 public class SignUp extends JFrame {
 
@@ -57,6 +61,22 @@ public class SignUp extends JFrame {
 		panel.setBounds(0, 0, 514, 671);
 		getContentPane().add(panel);
 		panel.setLayout(null);		
+		
+		KButton button = new KButton();
+		button.setkHoverForeGround(new Color(36,36,36));
+		button.kFillButton = true;
+		button.kBackGroundColor = SystemColor.desktop;
+		button.kBorderRadius = 15;	
+		button.setkForeGround(new Color(252,252,252));
+		button.setBounds(155, 585, 185, 45);
+		button.setText("Sign Up");
+		button.setFont(new Font("Lato", Font.BOLD, 13));
+		button.setBorder(null);
+		button.setkStartColor(new Color(0,105,242));
+		button.setkEndColor(new Color(36,36,36));
+		button.setkHoverEndColor(new Color(0, 49, 112));
+		button.setkHoverStartColor(new Color(0,105,242));
+		panel.add(button);
 		
 		
 		
@@ -139,10 +159,7 @@ public class SignUp extends JFrame {
 		separator_4.setEnabled(false);
 		separator_4.setBackground(new Color(0, 153, 255));
 		separator_4.setBounds(74, 297, 374, 7);
-		panel.add(separator_4);
-		
-		
-		
+		panel.add(separator_4);		
 
 		JSeparator separator_4_1 = new JSeparator();
 		separator_4_1.setOpaque(true);
@@ -187,12 +204,6 @@ public class SignUp extends JFrame {
 			
 			
 		});
-		
-		
-		
-		JButton btnSignUp = new JButton("Sign Up");
-		btnSignUp.setBounds(204, 590, 92, 41);
-		panel.add(btnSignUp);
 		
 		JButton btnCancelar = new JButton("Cancelar");
 		btnCancelar.addMouseListener(new MouseAdapter() {
