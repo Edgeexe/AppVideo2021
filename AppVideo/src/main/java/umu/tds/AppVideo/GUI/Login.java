@@ -71,6 +71,16 @@ public class Login extends JFrame {
 		btnNewButton.setBounds(759, 479, 180, 64);
 		btnNewButton.setFocusable(false);
 		panel.add(btnNewButton);
+		btnNewButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(e.getButton()==MouseEvent.BUTTON1) {
+					JFrame ventana=new VentanaPrincipal();
+					ventana.setVisible(true);
+					dispose();
+				}
+			}
+		});
 		
 		JButton boton_X = new JButton("X");
 		boton_X.setContentAreaFilled(false);
