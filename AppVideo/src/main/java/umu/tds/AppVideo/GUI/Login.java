@@ -82,23 +82,58 @@ public class Login extends JFrame {
 			}
 		});
 		
-		JButton boton_X = new JButton("X");
-		boton_X.setContentAreaFilled(false);
-		boton_X.setBorder(null);
-		boton_X.setBorderPainted(false);
+		JButton boton_X = new JButton("");
+		boton_X.setIcon(new ImageIcon(Login.class.getResource("/src/main/resources/Close button.png")));
+		boton_X.setBackground(Color.BLACK);
 		boton_X.setForeground(Color.WHITE);
 		boton_X.setFont(new Font("Dialog", Font.BOLD, 30));
 		boton_X.setBorder(null);
-		boton_X.setBounds(1211, 11, 31, 34);
+		boton_X.setBounds(1240, 0, 40, 26);
 		boton_X.setFocusable(false);
 		panel.add(boton_X);
 		
 		boton_X.addMouseListener(new MouseAdapter(){
 			public void mouseClicked(MouseEvent evento) {
-				if(evento.getButton()==MouseEvent.BUTTON1)System.exit(0);
+				if(evento.getButton()==MouseEvent.BUTTON1)
+					System.exit(0);
 			}
+			public void mouseEntered(MouseEvent evt) {
+				boton_X.setContentAreaFilled(true);
+				boton_X.setBackground(new Color(41,41,41));
+		    }
+
+		    public void mouseExited(MouseEvent evt) {
+				boton_X.setContentAreaFilled(false);		    
+		    }
 		});
-	
+		
+		
+		
+		JButton boton_Minimizar = new JButton("");
+		boton_Minimizar.setIcon(new ImageIcon(Login.class.getResource("/src/main/resources/Minimize.png")));
+		boton_Minimizar.setForeground(Color.WHITE);
+		boton_Minimizar.setFont(new Font("Dialog", Font.BOLD, 30));
+		boton_Minimizar.setFocusable(false);
+		boton_Minimizar.setBorder(null);
+		boton_Minimizar.setBackground(Color.BLACK);
+		boton_Minimizar.setBounds(1200, 0, 40, 26);
+		panel.add(boton_Minimizar);
+		
+		boton_Minimizar.addMouseListener(new MouseAdapter(){
+			public void mouseClicked(MouseEvent evento) {
+				if(evento.getButton()==MouseEvent.BUTTON1)
+					setState(JFrame.ICONIFIED);
+			}
+			
+			public void mouseEntered(MouseEvent evt) {
+				boton_Minimizar.setContentAreaFilled(true);
+				boton_Minimizar.setBackground(new Color(41,41,41));
+		    }
+
+		    public void mouseExited(MouseEvent evt) {
+				boton_Minimizar.setContentAreaFilled(false);		    
+		    }
+		});
 		
 		JLabel lblNewLabel = new JLabel("New label");
 		lblNewLabel.setIcon(new ImageIcon(Login.class.getResource("/src/main/resources/LogoText.png")));
