@@ -5,6 +5,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import java.awt.Rectangle;
 import java.awt.Color;
+import java.awt.Dimension;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -15,6 +16,14 @@ import java.awt.event.MouseEvent;
 import java.awt.Font;
 import javax.swing.SwingConstants;
 import java.awt.Insets;
+import java.awt.BorderLayout;
+import javax.swing.JList;
+import javax.swing.AbstractListModel;
+import javax.swing.Box;
+import javax.swing.border.BevelBorder;
+import javax.swing.JTextPane;
+import java.awt.FlowLayout;
+import javax.swing.BoxLayout;
 
 
 public class VentanaPrincipal extends JFrame {
@@ -23,6 +32,7 @@ public class VentanaPrincipal extends JFrame {
 	private JTextField textField;
 	private int posX=0;
 	private int	posY=0;
+	private JTextField escribir_busqueda;
 
 	public static void main(String[] args) {
 
@@ -38,6 +48,64 @@ public class VentanaPrincipal extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		getContentPane().setLayout(null);
 		
+		JPanel panel_Explorar = new JPanel();
+		panel_Explorar.setBounds(207, 96, 1073, 624);
+		getContentPane().add(panel_Explorar);
+		panel_Explorar.setLayout(new BorderLayout(0, 0));
+		
+		JPanel panel_este = new JPanel();
+		panel_este.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
+		panel_este.setBackground(Color.LIGHT_GRAY);
+		panel_Explorar.add(panel_este, BorderLayout.EAST);
+		panel_este.setLayout(new BoxLayout(panel_este, BoxLayout.Y_AXIS));
+		
+		JList<String> list = new JList<String>();
+		list.setLayoutOrientation(JList.VERTICAL_WRAP);
+		list.setModel(new AbstractListModel<String>() {
+			private static final long serialVersionUID = -7605725966827348811L;
+			String[] values = new String[] {"Agfsgsbs", "Bsfsaavv", "vzvzbbsC", "Dcdssca", "EcsCCvf", "cscscjxF", "aXXACdfG"};
+			public int getSize() {
+				return values.length;
+			}
+			public String getElementAt(int index) {
+				return values[index];
+			}
+		});
+		panel_este.add(list);
+		
+		panel_este.add(Box.createRigidArea(new Dimension(90,90)));
+		
+		JTextPane textPane = new JTextPane();
+		panel_este.add(textPane);
+		
+		JPanel panel_busqueda = new JPanel();
+		panel_busqueda.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
+		panel_busqueda.setBackground(Color.LIGHT_GRAY);
+		panel_Explorar.add(panel_busqueda, BorderLayout.NORTH);
+		panel_busqueda.setLayout(new BoxLayout(panel_busqueda, BoxLayout.X_AXIS));
+		
+		JLabel lbl_busqueda = new JLabel("Búsqueda: ");
+		panel_busqueda.add(lbl_busqueda);
+		panel_busqueda.add(Box.createRigidArea(new Dimension(20,30)));
+		
+		escribir_busqueda = new JTextField();
+		panel_busqueda.add(escribir_busqueda);
+		escribir_busqueda.setColumns(10);
+		
+		JButton boton_buscar = new JButton("Buscar");
+		panel_busqueda.add(boton_buscar);
+		
+		panel_busqueda.add(Box.createRigidArea(new Dimension(30,30)));
+		
+		JButton btn_Reset = new JButton("Reset");
+		panel_busqueda.add(btn_Reset);
+		
+		JPanel panel_resultado = new JPanel();
+		panel_resultado.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
+		panel_resultado.setBackground(Color.LIGHT_GRAY);
+		panel_Explorar.add(panel_resultado, BorderLayout.CENTER);
+		panel_resultado.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		
 		JButton boton_X = new JButton("");
 		boton_X.setIcon(new ImageIcon(Login.class.getResource("/src/main/resources/Close button.png")));
 		boton_X.setBackground(Color.BLACK);
@@ -46,7 +114,7 @@ public class VentanaPrincipal extends JFrame {
 		boton_X.setBorder(null);
 		boton_X.setBounds(1240, 0, 40, 26);
 		boton_X.setFocusable(false);
-		this.add(boton_X);
+		getContentPane().add(boton_X);
 		
 		boton_X.addMouseListener(new MouseAdapter(){
 			public void mouseClicked(MouseEvent evento) {
@@ -73,7 +141,7 @@ public class VentanaPrincipal extends JFrame {
 		boton_Minimizar.setBorder(null);
 		boton_Minimizar.setBackground(Color.BLACK);
 		boton_Minimizar.setBounds(1200, 0, 40, 26);
-		this.add(boton_Minimizar);
+		getContentPane().add(boton_Minimizar);
 		
 		boton_Minimizar.addMouseListener(new MouseAdapter(){
 			public void mouseClicked(MouseEvent evento) {
@@ -149,7 +217,15 @@ public class VentanaPrincipal extends JFrame {
 		    }
 
 		    public void mouseExited(MouseEvent evt) {
-		    	boton_Explorar.setContentAreaFilled(false);		    }
+		    	boton_Explorar.setContentAreaFilled(false);		    
+		    	}
+		    
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(e.getButton()==MouseEvent.BUTTON1) {
+					panel_Explorar.setVisible(true);
+				}
+			}
 		});
 		
 		JButton boton_mis_listas = new JButton("        Mis Listas");
@@ -174,6 +250,12 @@ public class VentanaPrincipal extends JFrame {
 		    public void mouseExited(MouseEvent evt) {
 		    	boton_mis_listas.setContentAreaFilled(false);		    
 		    }
+		    
+			public void mouseClicked(MouseEvent e) {
+				if(e.getButton()==MouseEvent.BUTTON1) {
+					panel_Explorar.setVisible(false);
+				}
+			}
 		});
 		
 		JButton boton_Recientes = new JButton("        Recientes");
