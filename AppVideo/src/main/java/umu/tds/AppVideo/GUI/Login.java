@@ -1,8 +1,6 @@
 package umu.tds.AppVideo.GUI;
 
 import javax.swing.*;
-import javax.swing.border.Border;
-
 import java.awt.*;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
@@ -217,8 +215,7 @@ public class Login extends JFrame {
 	
 	public static void main(String[] args) {
 
-		        JFrame frame = new Login(); // GUI gui = new GUI() as well
-		        // default value JFrame.HIDE_ON_CLOSE
+		        JFrame frame = new Login();
 		        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
 		        frame.setVisible(true);
 	}
@@ -258,28 +255,3 @@ class HintTextField extends JTextField implements FocusListener {
 	  }
 }
 
-
-class RoundedBorder implements Border {
-
-    private int radius;
-
-
-    RoundedBorder(int radius) {
-        this.radius = radius;
-    }
-
-
-    public Insets getBorderInsets(Component c) {
-        return new Insets(this.radius+1, this.radius+1, this.radius+2, this.radius);
-    }
-
-
-    public boolean isBorderOpaque() {
-        return true;
-    }
-
-
-    public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
-        g.drawRoundRect(x, y, width-1, height-1, radius, radius);
-    }
-}

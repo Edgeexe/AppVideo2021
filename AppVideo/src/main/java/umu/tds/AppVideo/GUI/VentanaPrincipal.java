@@ -10,7 +10,6 @@ import java.awt.Dimension;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JTextField;
-import java.awt.SystemColor;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.Font;
@@ -22,18 +21,19 @@ import javax.swing.AbstractListModel;
 import javax.swing.Box;
 import javax.swing.border.BevelBorder;
 import javax.swing.JTextPane;
+
 import java.awt.FlowLayout;
 import javax.swing.BoxLayout;
-
+import java.awt.*;
+import javax.swing.JToggleButton;
 
 public class VentanaPrincipal extends JFrame {
 
 	private static final long serialVersionUID = 1L;
-	private JTextField textField;
 	private int posX=0;
 	private int	posY=0;
 	private JTextField escribir_busqueda;
-
+	
 	public static void main(String[] args) {
 
         JFrame frame = new VentanaPrincipal();
@@ -106,59 +106,6 @@ public class VentanaPrincipal extends JFrame {
 		panel_Explorar.add(panel_resultado, BorderLayout.CENTER);
 		panel_resultado.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		
-		JButton boton_X = new JButton("");
-		boton_X.setIcon(new ImageIcon(Login.class.getResource("/src/main/resources/Close button.png")));
-		boton_X.setBackground(Color.BLACK);
-		boton_X.setForeground(Color.WHITE);
-		boton_X.setFont(new Font("Dialog", Font.BOLD, 30));
-		boton_X.setBorder(null);
-		boton_X.setBounds(1240, 0, 40, 26);
-		boton_X.setFocusable(false);
-		getContentPane().add(boton_X);
-		
-		boton_X.addMouseListener(new MouseAdapter(){
-			public void mouseClicked(MouseEvent evento) {
-				if(evento.getButton()==MouseEvent.BUTTON1)
-					System.exit(0);
-			}
-			public void mouseEntered(MouseEvent evt) {
-				boton_X.setContentAreaFilled(true);
-				boton_X.setBackground(new Color(41,41,41));
-		    }
-
-		    public void mouseExited(MouseEvent evt) {
-				boton_X.setContentAreaFilled(false);		    
-		    }
-		});
-		
-		
-		
-		JButton boton_Minimizar = new JButton("");
-		boton_Minimizar.setIcon(new ImageIcon(Login.class.getResource("/src/main/resources/Minimize.png")));
-		boton_Minimizar.setForeground(Color.WHITE);
-		boton_Minimizar.setFont(new Font("Dialog", Font.BOLD, 30));
-		boton_Minimizar.setFocusable(false);
-		boton_Minimizar.setBorder(null);
-		boton_Minimizar.setBackground(Color.BLACK);
-		boton_Minimizar.setBounds(1200, 0, 40, 26);
-		getContentPane().add(boton_Minimizar);
-		
-		boton_Minimizar.addMouseListener(new MouseAdapter(){
-			public void mouseClicked(MouseEvent evento) {
-				if(evento.getButton()==MouseEvent.BUTTON1)
-					setState(JFrame.ICONIFIED);
-			}
-			
-			public void mouseEntered(MouseEvent evt) {
-				boton_Minimizar.setContentAreaFilled(true);
-				boton_Minimizar.setBackground(new Color(41,41,41));
-		    }
-
-		    public void mouseExited(MouseEvent evt) {
-				boton_Minimizar.setContentAreaFilled(false);		    
-		    }
-		});
-		
 		JPanel panel_cabecera = new JPanel();
 		panel_cabecera.setOpaque(false);
 		panel_cabecera.setBorder(null);
@@ -166,29 +113,40 @@ public class VentanaPrincipal extends JFrame {
 		getContentPane().add(panel_cabecera);
 		panel_cabecera.setLayout(null);
 		
-		JButton boton_Logout = new JButton("Logout");
-		boton_Logout.setBounds(1081, 33, 79, 29);
-		panel_cabecera.add(boton_Logout);
+		JLabel logo = new JLabel("");
+		logo.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/src/main/resources/LogoNoText.png")));
+		logo.setBounds(45, 5, 100, 95);
+		panel_cabecera.add(logo);
 		
-		JButton boton_Premium = new JButton("Premium");
-		boton_Premium.setBounds(1170, 33, 90, 29);
-		boton_Premium.setForeground(Color.RED);
+		JLabel textoUsuario = new JLabel("Usuario");
+		textoUsuario.setFont(new Font("Lato Black", Font.BOLD, 15));
+		textoUsuario.setForeground(Color.WHITE);
+		textoUsuario.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/src/main/resources/UserIcon.png")));
+		int width = textoUsuario.getText().length()*15;
+		textoUsuario.setBounds(277, 33, width, 29);
+		panel_cabecera.add(textoUsuario);
+		
+		RoundedPanel panel = new RoundedPanel(45, new Color(41,41,41));
+		panel.setBounds(275, 28, width, 39);
+		panel.setOpaque(false);
+		panel_cabecera.add(panel);
+		
+		JToggleButton boton_Premium = new JToggleButton("");
+		boton_Premium.setSelectedIcon(new ImageIcon(VentanaPrincipal.class.getResource("/src/main/resources/PremiumStatus.png")));
+		boton_Premium.setContentAreaFilled(false);
+		boton_Premium.setBorderPainted(false);
+		boton_Premium.setRolloverSelectedIcon(new ImageIcon(VentanaPrincipal.class.getResource("/src/main/resources/PremiumStatus.png")));
+		boton_Premium.setDisabledIcon(new ImageIcon(VentanaPrincipal.class.getResource("/src/main/resources/PremiumButton.png")));
+		boton_Premium.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/src/main/resources/PremiumButton.png")));
+		boton_Premium.setBorder(null);
+		boton_Premium.setBounds(226, 28, 39, 39);
 		panel_cabecera.add(boton_Premium);
 		
-		textField = new JTextField();
-		textField.setBounds(848, 29, 223, 37);
-		textField.setText("Hola + nombre de usuario");
-		textField.setSelectionColor(SystemColor.menu);
-		textField.setEditable(false);
-		textField.setColumns(10);
-		textField.setBorder(null);
-		textField.setBackground(SystemColor.menu);
-		panel_cabecera.add(textField);
-		
-		JLabel label_1 = new JLabel("");
-		label_1.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/src/main/resources/LogoNoText.png")));
-		label_1.setBounds(56, 11, 100, 95);
-		panel_cabecera.add(label_1);
+		boton_Premium.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent evt) {
+				//TODO: Hacer el boton no clickeable cuando el usuario ya sea premium
+			}
+		});
 		
 		JPanel panel_botones = new JPanel();
 		panel_botones.setOpaque(false);
@@ -306,13 +264,89 @@ public class VentanaPrincipal extends JFrame {
 		    }
 		});
 		
-		JLabel label = new JLabel("");
-		label.setIcon(new ImageIcon(Login.class.getResource("/src/main/resources/AppBG.png")));
-		label.setBounds(0, 0, 1280, 720);
-		getContentPane().add(label);
+		JButton boton_Logout = new JButton("CERRAR SESION");
+		boton_Logout.setBorder(null);
+		boton_Logout.setBorderPainted(false);
+		boton_Logout.setHorizontalTextPosition(SwingConstants.CENTER);
+		boton_Logout.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/src/main/resources/Logout.png")));
+		boton_Logout.setRolloverEnabled(true);
+		boton_Logout.setRolloverIcon(new ImageIcon(VentanaPrincipal.class.getResource("/src/main/resources/LogoutHover.png")));
+		boton_Logout.setFont(new Font("Lato Black", Font.BOLD, 15));
+		boton_Logout.setForeground(Color.BLACK);
+		boton_Logout.setContentAreaFilled(false);
+		boton_Logout.setFocusPainted(false);
+		boton_Logout.setBounds(19, 548, 169, 58);
+		panel_botones.add(boton_Logout);
+		
+		boton_Nueva_Lista.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent evt) {
+				//TODO Funcionalidad de cerrar sesion
+			}
+		});
+		
+		JButton boton_Cerrar = new JButton("");
+		boton_Cerrar.setIcon(new ImageIcon(Login.class.getResource("/src/main/resources/Close button.png")));
+		boton_Cerrar.setBackground(Color.BLACK);
+		boton_Cerrar.setForeground(Color.WHITE);
+		boton_Cerrar.setFont(new Font("Dialog", Font.BOLD, 30));
+		boton_Cerrar.setBorder(null);
+		boton_Cerrar.setBounds(1240, 0, 40, 26);
+		boton_Cerrar.setFocusable(false);
+		getContentPane().add(boton_Cerrar);
+		
+		boton_Cerrar.addMouseListener(new MouseAdapter(){
+			public void mouseClicked(MouseEvent evento) {
+				if(evento.getButton()==MouseEvent.BUTTON1)
+					System.exit(0);
+			}
+			public void mouseEntered(MouseEvent evt) {
+				boton_Cerrar.setContentAreaFilled(true);
+				boton_Cerrar.setBackground(new Color(41,41,41));
+		    }
+
+		    public void mouseExited(MouseEvent evt) {
+				boton_Cerrar.setContentAreaFilled(false);		    
+		    }
+		});
 		
 		
-		this.addMouseListener(new MouseAdapter()			//Para arrastrar la ventana
+		
+		JButton boton_Minimizar = new JButton("");
+		boton_Minimizar.setIcon(new ImageIcon(Login.class.getResource("/src/main/resources/Minimize.png")));
+		boton_Minimizar.setForeground(Color.WHITE);
+		boton_Minimizar.setFont(new Font("Dialog", Font.BOLD, 30));
+		boton_Minimizar.setFocusable(false);
+		boton_Minimizar.setBorder(null);
+		boton_Minimizar.setBackground(Color.BLACK);
+		boton_Minimizar.setBounds(1200, 0, 40, 26);
+		getContentPane().add(boton_Minimizar);
+		
+		boton_Minimizar.addMouseListener(new MouseAdapter(){
+			public void mouseClicked(MouseEvent evento) {
+				if(evento.getButton()==MouseEvent.BUTTON1)
+					setState(JFrame.ICONIFIED);
+			}
+			
+			public void mouseEntered(MouseEvent evt) {
+				boton_Minimizar.setContentAreaFilled(true);
+				boton_Minimizar.setBackground(new Color(41,41,41));
+		    }
+
+		    public void mouseExited(MouseEvent evt) {
+				boton_Minimizar.setContentAreaFilled(false);		    
+		    }
+		});
+		
+		JLabel fondo = new JLabel("");
+		fondo.setIcon(new ImageIcon(Login.class.getResource("/src/main/resources/AppBG.png")));
+		fondo.setBounds(0, 0, 1280, 720);
+		getContentPane().add(fondo);
+		
+		//
+		//Para arrastrar la ventana
+		//
+		
+		this.addMouseListener(new MouseAdapter()			
 				{
 				   public void mousePressed(MouseEvent e)
 				   {
@@ -331,3 +365,61 @@ public class VentanaPrincipal extends JFrame {
 
 	}
 }
+
+class RoundedPanel extends JPanel
+
+{
+
+	private static final long serialVersionUID = 1L;
+	private Color backgroundColor;
+    private int cornerRadius = 15;
+
+    public RoundedPanel(LayoutManager layout, int radius) {
+        super(layout);
+        cornerRadius = radius;
+    }
+
+    public RoundedPanel(LayoutManager layout, int radius, Color bgColor) {
+        super(layout);
+        cornerRadius = radius;
+        backgroundColor = bgColor;
+    }
+
+    public RoundedPanel(int radius) {
+        super();
+        cornerRadius = radius;
+    }
+
+    public RoundedPanel(int radius, Color bgColor) {
+        super();
+        cornerRadius = radius;
+        backgroundColor = bgColor;
+    }
+
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        Dimension arcs = new Dimension(cornerRadius, cornerRadius);
+        int width = getWidth();
+        int height = getHeight();
+        Graphics2D graphics = (Graphics2D) g;
+        graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+        if (backgroundColor != null) {
+            graphics.setColor(backgroundColor);
+        } else {
+            graphics.setColor(getBackground());
+
+        }
+        
+        graphics.fillRoundRect(0, 0, width-1, height-1, arcs.width, arcs.height); //paint background
+        graphics.setColor(getForeground());
+        graphics.drawRoundRect(0, 0, width-1, height-1, arcs.width, arcs.height); //paint border
+
+    }
+  }
+
+
+
+
