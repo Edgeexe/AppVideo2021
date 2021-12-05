@@ -1,4 +1,4 @@
-package umu.tds.dominio;
+package umu.tds.AppVideo;
 
 import java.util.HashMap;
 
@@ -20,5 +20,9 @@ public class RepositorioUsuarios {
 	
 	public void removeUsuario(Usuario usuario) {
 		asistentesPorLogin.remove(usuario.getNombre());
+	}
+	
+	public Usuario getUsuario(String nombre) {
+		return asistentesPorLogin.get(nombre);
 	}
 }
