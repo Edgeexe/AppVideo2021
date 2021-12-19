@@ -1,4 +1,4 @@
-package umu.tds.dominio;
+package umu.tds.AppVideo;
 
 public class Usuario {
 	
