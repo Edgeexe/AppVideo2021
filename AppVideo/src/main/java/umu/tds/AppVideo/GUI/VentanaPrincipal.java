@@ -26,6 +26,7 @@ import java.awt.FlowLayout;
 import javax.swing.BoxLayout;
 import java.awt.*;
 import javax.swing.JToggleButton;
+import pulsador.Luz;
 
 public class VentanaPrincipal extends JFrame {
 
@@ -277,6 +278,11 @@ public class VentanaPrincipal extends JFrame {
 		boton_Logout.setFocusPainted(false);
 		boton_Logout.setBounds(19, 548, 169, 58);
 		panel_botones.add(boton_Logout);
+		
+		Luz luz = new Luz();
+		luz.color = Color.YELLOW;
+		luz.setBounds(60, 419, 83, 71);
+		panel_botones.add(luz);
 		
 		boton_Nueva_Lista.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent evt) {
