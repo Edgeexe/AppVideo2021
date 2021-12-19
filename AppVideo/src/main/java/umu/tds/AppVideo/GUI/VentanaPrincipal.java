@@ -284,6 +284,10 @@ public class VentanaPrincipal extends JFrame {
 		luz.setBounds(60, 419, 83, 71);
 		panel_botones.add(luz);
 		
+		Luz luz_1 = new Luz();
+		luz_1.setBounds(77, 32, 89, 53);
+		panel_botones.add(luz_1);
+		
 		boton_Nueva_Lista.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent evt) {
 				//TODO Funcionalidad de cerrar sesion
