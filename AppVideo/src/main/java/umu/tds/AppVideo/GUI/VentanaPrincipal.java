@@ -9,9 +9,12 @@ import java.awt.Dimension;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JTextField;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.util.EventObject;
 import java.awt.Font;
 import javax.swing.SwingConstants;
 import java.awt.Insets;
@@ -26,7 +29,10 @@ import java.awt.FlowLayout;
 import javax.swing.BoxLayout;
 import java.awt.*;
 import javax.swing.JToggleButton;
+
+import pulsador.IEncendidoListener;
 import pulsador.Luz;
+import umu.tds.Controlador.Controlador;
 
 public class VentanaPrincipal extends JFrame {
 
@@ -281,12 +287,21 @@ public class VentanaPrincipal extends JFrame {
 		
 		Luz luz = new Luz();
 		luz.color = Color.YELLOW;
-		luz.setBounds(60, 419, 83, 71);
+		luz.setBounds(53, 385, 99, 102);
 		panel_botones.add(luz);
 		
-		Luz luz_1 = new Luz();
-		luz_1.setBounds(77, 32, 89, 53);
-		panel_botones.add(luz_1);
+		luz.addEncendidoListener(new IEncendidoListener() {
+			public void enteradoCambioEncendido(EventObject evt) {
+				if(luz.isEncendido()) {
+					JFileChooser selectorArchivos = new JFileChooser();
+					selectorArchivos.showOpenDialog(selectorArchivos);
+					File archivo_xml = selectorArchivos.getSelectedFile(); // obtiene el archivo seleccionado
+					Controlador.getUnicaInstancia().cargarVideos(archivo_xml);
+					//En controlador llamar a cargar video
+				}
+					
+			}
+		});
 		
 		boton_Nueva_Lista.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent evt) {

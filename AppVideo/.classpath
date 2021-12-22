@@ -28,5 +28,6 @@
 	<classpathentry kind="lib" path="src/main/resources/KControls-2.0.jar"/>
 	<classpathentry kind="lib" path="jgoodies-forms-1.8.0.jar" sourcepath="jgoodies-forms-1.8.0-sources.jar"/>
 	<classpathentry kind="lib" path="C:/Users/javit/Documents/Luz.jar"/>
+	<classpathentry kind="lib" path="C:/Users/javit/Documents/CargadorVideos.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
