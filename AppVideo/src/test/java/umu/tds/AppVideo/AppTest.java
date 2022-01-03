@@ -14,18 +14,6 @@ import umu.tds.AppVideo.GUI.VentanaPrincipal;
  */
 public class AppTest 
 {
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					VentanaPrincipal window = new VentanaPrincipal();
-					window.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
     /**
      * Rigorous Test :-)
      */
