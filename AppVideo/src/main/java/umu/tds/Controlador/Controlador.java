@@ -23,7 +23,7 @@ public class Controlador implements VideosListener {
 	public void nuevosVideos(EventObject event) {
 		//Si han llegado nuevos videos incluirlos en el catálogo de videos
 		if(event instanceof VideosEvent){
-		  VideosEvent ev=(VideosEvent)event;
+		  //VideosEvent ev=(VideosEvent)event;
 		  //Añadir los videos ev al Catalogo
 		 }
 	}
