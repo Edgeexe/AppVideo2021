@@ -7,7 +7,7 @@ import java.util.List;
 
 import beans.Entidad;
 import beans.Propiedad;
-import umu.tds.AppVideo.*;
+import dominio.*;
 import tds.driver.FactoriaServicioPersistencia;
 import tds.driver.ServicioPersistencia;
 
@@ -81,6 +81,7 @@ public class AdaptadorFiltroTDS implements IAdaptadorFiltroDAO {
 		return null;
 	}
 
+	@Override
 	public List<Filtro> recuperarTodosFiltros() {
 		List<Filtro> filtros = new LinkedList<Filtro>();
 		List<Entidad> entidades = servPersistencia.recuperarEntidades("filtro");

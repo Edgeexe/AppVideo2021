@@ -51,8 +51,7 @@ public class AdaptadorListaVideosTDS implements IAdaptadorListaVideosDAO{
 
 	public void borrarListaVideos(ListaVideos lv) {
 		Entidad eLv;
-		AdaptadorVideoTDS adaptadorVideo = AdaptadorVideoTDS.getUnicaInstancia();
-
+		//AdaptadorVideoTDS adaptadorVideo = AdaptadorVideoTDS.getUnicaInstancia();
 		eLv = servPersistencia.recuperarEntidad(lv.getCodigo());
 		servPersistencia.borrarEntidad(eLv);
 

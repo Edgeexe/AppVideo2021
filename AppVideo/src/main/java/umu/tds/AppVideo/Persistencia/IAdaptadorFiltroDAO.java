@@ -2,7 +2,7 @@ package umu.tds.AppVideo.Persistencia;
 
 import java.util.List;
 
-import umu.tds.AppVideo.*;
+import dominio.Filtro;
 
 public interface IAdaptadorFiltroDAO {
 	public void registrarFiltro(Filtro filtro);

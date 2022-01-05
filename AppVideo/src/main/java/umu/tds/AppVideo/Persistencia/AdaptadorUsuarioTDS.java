@@ -52,7 +52,7 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO{
 			adaptadorVideo.registrarVideo(v);
 		
 		AdaptadorFiltroTDS adaptadorFiltroTDS = AdaptadorFiltroTDS.getUnicaInstancia();
-		adaptadorFiltroTDS.registrarFiltro(usuario.getFiltro());
+		adaptadorFiltroTDS.registrarFiltro(usuario.getFiltros());
 
 		eUsuario = new Entidad();
 		eUsuario.setNombre("usuario");
@@ -65,7 +65,7 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO{
 						new Propiedad("usuario", usuario.getUsuario()),
 						new Propiedad("contrasena", usuario.getContrasena()),
 						new Propiedad("premium", String.valueOf(usuario.isPremium())),
-						new Propiedad("filtro", String.valueOf(usuario.getFiltro().getCodigo())), //repasar en caso de fallo
+						new Propiedad("filtro", String.valueOf(((Filtro) usuario.getFiltros()).getCodigo())), //repasar en caso de fallo
 						new Propiedad("listasVideos", obtenerCodigosListasVideos(usuario.getListasVideos())),
 						new Propiedad("recientes", obtenerCodigosVideos(usuario.getRecientes())))));
 						
@@ -88,7 +88,7 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO{
 		}
 		
 		AdaptadorFiltroTDS adaptadorFiltroTDS = AdaptadorFiltroTDS.getUnicaInstancia();
-		adaptadorFiltroTDS.borrarFiltro(usuario.getFiltro());
+		adaptadorFiltroTDS.borrarFiltro(usuario.getFiltros());
 		
 		eUsuario = servPersistencia.recuperarEntidad(usuario.getCodigo());
 		servPersistencia.borrarEntidad(eUsuario);
@@ -117,7 +117,7 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO{
 			} else if (prop.getNombre().equals("premium")) {
 				prop.setValor(String.valueOf(usuario.isPremium()));
 			} else if (prop.getNombre().equals("filtro")) {
-				prop.setValor(String.valueOf(usuario.getFiltro().getCodigo())); 
+				prop.setValor(String.valueOf(usuario.getFiltros().getCodigo())); 
 			} else if (prop.getNombre().equals("listasVideos")) {
 				String lineas = obtenerCodigosListasVideos(usuario.getListasVideos());
 				prop.setValor(lineas);
@@ -164,7 +164,7 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO{
 		AdaptadorFiltroTDS adaptadorFiltroTDS = AdaptadorFiltroTDS.getUnicaInstancia();
 		filtro = adaptadorFiltroTDS.recuperarFiltro
 				(Integer.parseInt(servPersistencia.recuperarPropiedadEntidad(eUsuario, "filtro")));
-		usuarioFinal.setFiltro(filtro);
+		usuarioFinal.setFiltros(filtro);
 		listasVideos = obtenerListasVideosDesdeCodigos(servPersistencia.recuperarPropiedadEntidad(eUsuario, "listasVideos"));
 		recientes = obtenerRecientesDesdeCodigos(servPersistencia.recuperarPropiedadEntidad(eUsuario, "recientes"));
 

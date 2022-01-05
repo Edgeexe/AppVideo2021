@@ -7,7 +7,7 @@ import java.util.List;
 
 import beans.Entidad;
 import beans.Propiedad;
-import umu.tds.AppVideo.*;
+import dominio.*;
 import tds.driver.FactoriaServicioPersistencia;
 import tds.driver.ServicioPersistencia;
 
@@ -67,7 +67,7 @@ public class AdaptadorEtiquetaTDS implements IAdaptadorEtiquetaDAO {
 		eEtiqueta = servPersistencia.recuperarEntidad(codigo);
 		nombre = servPersistencia.recuperarPropiedadEntidad(eEtiqueta, "nombre");
 
-		Etiqueta etiqueta = SetEtiquetas.INSTANCE.get(nombre);
+		Etiqueta etiqueta = new Etiqueta(nombre);
 		etiqueta.setCodigo(codigo);
 		return etiqueta;
 	}

@@ -1,33 +1,33 @@
-package umu.tds.AppVideo;
+package dominio;
 
-public class NoFiltro implements Filtro {
+public class FiltroAdultos implements Filtro {
 
 	int codigo;
 	String nombre = this.getClass().getName();
 	
-	public NoFiltro() {
+	public FiltroAdultos() {
 		this.codigo = 0;
 	}
 
-	@Override
-	public boolean esVideoOK(Video v, Usuario usuario) {
-		return true;
-	}
-
-	@Override
 	public int getCodigo() {
 		return codigo;
 	}
 
-	@Override
+
 	public void setCodigo(int codigo) {
 		this.codigo=codigo;
 		
 	}
 	
-	@Override
 	public String getNombre() {
 		return nombre;
 	}
 
+	@Override
+	public boolean esVideoOk(Video video, Usuario usuario) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }
+

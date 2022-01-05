@@ -10,16 +10,14 @@ import java.util.StringTokenizer;
 
 import beans.Entidad;
 import beans.Propiedad;
-import dominio.Etiqueta;
-import dominio.Video;
+import dominio.*;
 import tds.driver.FactoriaServicioPersistencia;
 import tds.driver.ServicioPersistencia;
 
 public class AdaptadorVideoTDS implements IAdaptadorVideoDAO{
 	private static ServicioPersistencia servPersistencia;
-
-	private static AdaptadorVideoTDS unicaInstancia;
-
+	private static AdaptadorVideoTDS unicaInstancia = null;
+	
 	public static AdaptadorVideoTDS getUnicaInstancia() {
 		if (unicaInstancia == null)
 			return new AdaptadorVideoTDS();
@@ -47,11 +45,10 @@ public class AdaptadorVideoTDS implements IAdaptadorVideoDAO{
 		eVideo.setNombre("video");
 		eVideo.setPropiedades(new ArrayList<Propiedad>(
 				Arrays.asList(new Propiedad("titulo", String.valueOf(video.getTitulo())),
-						new Propiedad("numRepro", String.valueOf(video.getNumeroReproducciones())),
+						new Propiedad("numRepro", String.valueOf(video.getNumRepro())),
 						new Propiedad("url", String.valueOf(video.getUrl())),
 						new Propiedad("etiquetas", obtenerCodigosEtiquetas(video.getEtiquetas())))));
 		eVideo = servPersistencia.registrarEntidad(eVideo);
-		video.setCodigo(eVideo.getId());
 	}
 
 	public void borrarVideo(Video video) {
@@ -77,7 +74,7 @@ public class AdaptadorVideoTDS implements IAdaptadorVideoDAO{
 			} else if (prop.getNombre().equals("url")) {
 				prop.setValor(String.valueOf(video.getUrl()));
 			} else if (prop.getNombre().equals("numRepro")) {
-				prop.setValor(String.valueOf(video.getNumeroReproducciones()));
+				prop.setValor(String.valueOf(video.getNumRepro()));
 			} else if (prop.getNombre().equals("etiquetas")) {
 				String lineas = obtenerCodigosEtiquetas(video.getEtiquetas());
 				prop.setValor(lineas);
@@ -95,7 +92,7 @@ public class AdaptadorVideoTDS implements IAdaptadorVideoDAO{
 		int numRepro = Integer.parseInt(servPersistencia.recuperarPropiedadEntidad(eVideo, "numRepro"));
 		
 		Video video = new Video(titulo, url);
-		video.setNumeroReproducciones(numRepro);
+		video.setNumRepro(numRepro);
 		video.setCodigo(codigo);
 		Set<Etiqueta> etiquetas = obtenerEtiquetasDesdeCodigos(
 				servPersistencia.recuperarPropiedadEntidad(eVideo, "etiquetas"));

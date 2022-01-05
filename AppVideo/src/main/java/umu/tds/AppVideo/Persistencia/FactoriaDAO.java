@@ -1,7 +1,7 @@
 package umu.tds.AppVideo.Persistencia;
 
 public abstract class FactoriaDAO {
-	private static FactoriaDAO unicaInstancia;
+	private static FactoriaDAO unicaInstancia=null;
 	
 	public static final String DAO_TDS = "persistencia.TDSFactoriaDAO";
 	
@@ -24,7 +24,7 @@ public abstract class FactoriaDAO {
 	protected FactoriaDAO (){}
 		
 		
-	public abstract IAdaptadorUsuarioDAO getUsuaioDAO();
+	public abstract IAdaptadorUsuarioDAO getUsuarioDAO();
 	public abstract IAdaptadorVideoDAO getVideoDAO();
 	public abstract IAdaptadorFiltroDAO getFiltroDAO();
 	public abstract IAdaptadorListaVideosDAO getListaVideosDAO();
