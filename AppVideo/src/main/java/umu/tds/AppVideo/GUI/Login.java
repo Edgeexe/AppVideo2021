@@ -81,7 +81,7 @@ public class Login extends JFrame {
 		});
 		
 		JButton boton_X = new JButton("");
-		boton_X.setIcon(new ImageIcon(Login.class.getResource("/src/main/resources/Close button.png")));
+		boton_X.setIcon(new ImageIcon(Login.class.getResource("/umu/tds/AppVideo/Resources/Close button.png")));
 		boton_X.setBackground(Color.BLACK);
 		boton_X.setForeground(Color.WHITE);
 		boton_X.setFont(new Font("Dialog", Font.BOLD, 30));
@@ -108,7 +108,7 @@ public class Login extends JFrame {
 		
 		
 		JButton boton_Minimizar = new JButton("");
-		boton_Minimizar.setIcon(new ImageIcon(Login.class.getResource("/src/main/resources/Minimize.png")));
+		boton_Minimizar.setIcon(new ImageIcon(Login.class.getResource("/umu/tds/AppVideo/Resources/Minimize.png")));
 		boton_Minimizar.setForeground(Color.WHITE);
 		boton_Minimizar.setFont(new Font("Dialog", Font.BOLD, 30));
 		boton_Minimizar.setFocusable(false);
@@ -134,7 +134,7 @@ public class Login extends JFrame {
 		});
 		
 		JLabel lblNewLabel = new JLabel("New label");
-		lblNewLabel.setIcon(new ImageIcon(Login.class.getResource("/src/main/resources/LogoText.png")));
+		lblNewLabel.setIcon(new ImageIcon(Login.class.getResource("/umu/tds/AppVideo/Resources/LogoText.png")));
 		lblNewLabel.setBounds(835, 31, 250, 250);
 		panel.add(lblNewLabel);
 		
@@ -188,7 +188,7 @@ public class Login extends JFrame {
 		});
 		
 		JLabel label = new JLabel("");
-		label.setIcon(new ImageIcon(Login.class.getResource("/src/main/resources/AppLogin.png")));
+		label.setIcon(new ImageIcon(Login.class.getResource("/umu/tds/AppVideo/Resources/AppLogin.png")));
 		label.setBounds(0, 0, 1280, 720);
 		panel.add(label);
 		

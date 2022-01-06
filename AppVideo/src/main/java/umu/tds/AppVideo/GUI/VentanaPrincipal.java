@@ -121,14 +121,14 @@ public class VentanaPrincipal extends JFrame {
 		panel_cabecera.setLayout(null);
 		
 		JLabel logo = new JLabel("");
-		logo.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/src/main/resources/LogoNoText.png")));
+		logo.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/umu/tds/AppVideo/Resources/LogoNoText.png")));
 		logo.setBounds(45, 5, 100, 95);
 		panel_cabecera.add(logo);
 		
 		JLabel textoUsuario = new JLabel("Usuario");
 		textoUsuario.setFont(new Font("Lato Black", Font.BOLD, 15));
 		textoUsuario.setForeground(Color.WHITE);
-		textoUsuario.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/src/main/resources/UserIcon.png")));
+		textoUsuario.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/umu/tds/AppVideo/Resources/UserIcon.png")));
 		int width = textoUsuario.getText().length()*15;
 		textoUsuario.setBounds(277, 33, width, 29);
 		panel_cabecera.add(textoUsuario);
@@ -139,12 +139,12 @@ public class VentanaPrincipal extends JFrame {
 		panel_cabecera.add(panel);
 		
 		JToggleButton boton_Premium = new JToggleButton("");
-		boton_Premium.setSelectedIcon(new ImageIcon(VentanaPrincipal.class.getResource("/src/main/resources/PremiumStatus.png")));
+		boton_Premium.setSelectedIcon(new ImageIcon(VentanaPrincipal.class.getResource("/umu/tds/AppVideo/Resources/PremiumStatus.png")));
 		boton_Premium.setContentAreaFilled(false);
 		boton_Premium.setBorderPainted(false);
-		boton_Premium.setRolloverSelectedIcon(new ImageIcon(VentanaPrincipal.class.getResource("/src/main/resources/PremiumStatus.png")));
-		boton_Premium.setDisabledIcon(new ImageIcon(VentanaPrincipal.class.getResource("/src/main/resources/PremiumButton.png")));
-		boton_Premium.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/src/main/resources/PremiumButton.png")));
+		boton_Premium.setRolloverSelectedIcon(new ImageIcon(VentanaPrincipal.class.getResource("/umu/tds/AppVideo/Resources/PremiumStatus.png")));
+		boton_Premium.setDisabledIcon(new ImageIcon(VentanaPrincipal.class.getResource("/umu/tds/AppVideo/Resources/PremiumButton.png")));
+		boton_Premium.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/umu/tds/AppVideo/Resources/PremiumButton.png")));
 		boton_Premium.setBorder(null);
 		boton_Premium.setBounds(226, 28, 39, 39);
 		panel_cabecera.add(boton_Premium);
@@ -169,7 +169,7 @@ public class VentanaPrincipal extends JFrame {
 		boton_Explorar.setContentAreaFilled(false);
 		boton_Explorar.setBorderPainted(false);
 		boton_Explorar.setOpaque(false);
-		boton_Explorar.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/src/main/resources/HomeIcon.png")));
+		boton_Explorar.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/umu/tds/AppVideo/Resources/HomeIcon.png")));
 		boton_Explorar.setFont(new Font("Lato Black", Font.BOLD, 15));
 		boton_Explorar.setForeground(Color.WHITE);
 		boton_Explorar.setBounds(0, 139, 206, 46);
@@ -200,7 +200,7 @@ public class VentanaPrincipal extends JFrame {
 		boton_mis_listas.setHorizontalAlignment(SwingConstants.LEFT);
 		boton_mis_listas.setContentAreaFilled(false);
 		boton_mis_listas.setBorderPainted(false);
-		boton_mis_listas.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/src/main/resources/LibraryIcon.png")));
+		boton_mis_listas.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/umu/tds/AppVideo/Resources/LibraryIcon.png")));
 		boton_mis_listas.setForeground(Color.WHITE);
 		boton_mis_listas.setFont(new Font("Lato Black", Font.BOLD, 15));
 		boton_mis_listas.setBounds(0, 185, 206, 46);
@@ -230,7 +230,7 @@ public class VentanaPrincipal extends JFrame {
 		boton_Recientes.setHorizontalAlignment(SwingConstants.LEFT);
 		boton_Recientes.setContentAreaFilled(false);
 		boton_Recientes.setBorderPainted(false);
-		boton_Recientes.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/src/main/resources/RecentsIcon.png")));
+		boton_Recientes.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/umu/tds/AppVideo/Resources/RecentsIcon.png")));
 		boton_Recientes.setForeground(Color.WHITE);
 		boton_Recientes.setFont(new Font("Lato Black", Font.BOLD, 15));
 		boton_Recientes.setBounds(0, 230, 206, 46);
@@ -254,7 +254,7 @@ public class VentanaPrincipal extends JFrame {
 		boton_Nueva_Lista.setHorizontalAlignment(SwingConstants.LEFT);
 		boton_Nueva_Lista.setContentAreaFilled(false);
 		boton_Nueva_Lista.setBorderPainted(false);
-		boton_Nueva_Lista.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/src/main/resources/NewListIcon.png")));
+		boton_Nueva_Lista.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/umu/tds/AppVideo/Resources/NewListIcon.png")));
 		boton_Nueva_Lista.setForeground(Color.WHITE);
 		boton_Nueva_Lista.setFont(new Font("Lato Black", Font.BOLD, 15));
 		boton_Nueva_Lista.setBounds(0, 275, 206, 46);
@@ -275,9 +275,9 @@ public class VentanaPrincipal extends JFrame {
 		boton_Logout.setBorder(null);
 		boton_Logout.setBorderPainted(false);
 		boton_Logout.setHorizontalTextPosition(SwingConstants.CENTER);
-		boton_Logout.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/src/main/resources/Logout.png")));
+		boton_Logout.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/umu/tds/AppVideo/Resources/Logout.png")));
 		boton_Logout.setRolloverEnabled(true);
-		boton_Logout.setRolloverIcon(new ImageIcon(VentanaPrincipal.class.getResource("/src/main/resources/LogoutHover.png")));
+		boton_Logout.setRolloverIcon(new ImageIcon(VentanaPrincipal.class.getResource("/umu/tds/AppVideo/Resources/LogoutHover.png")));
 		boton_Logout.setFont(new Font("Lato Black", Font.BOLD, 15));
 		boton_Logout.setForeground(Color.BLACK);
 		boton_Logout.setContentAreaFilled(false);
@@ -310,7 +310,7 @@ public class VentanaPrincipal extends JFrame {
 		});
 		
 		JButton boton_Cerrar = new JButton("");
-		boton_Cerrar.setIcon(new ImageIcon(Login.class.getResource("/src/main/resources/Close button.png")));
+		boton_Cerrar.setIcon(new ImageIcon(Login.class.getResource("/umu/tds/AppVideo/Resources/Close button.png")));
 		boton_Cerrar.setBackground(Color.BLACK);
 		boton_Cerrar.setForeground(Color.WHITE);
 		boton_Cerrar.setFont(new Font("Dialog", Font.BOLD, 30));
@@ -337,7 +337,7 @@ public class VentanaPrincipal extends JFrame {
 		
 		
 		JButton boton_Minimizar = new JButton("");
-		boton_Minimizar.setIcon(new ImageIcon(Login.class.getResource("/src/main/resources/Minimize.png")));
+		boton_Minimizar.setIcon(new ImageIcon(Login.class.getResource("/umu/tds/AppVideo/Resources/Minimize.png")));
 		boton_Minimizar.setForeground(Color.WHITE);
 		boton_Minimizar.setFont(new Font("Dialog", Font.BOLD, 30));
 		boton_Minimizar.setFocusable(false);
@@ -363,7 +363,7 @@ public class VentanaPrincipal extends JFrame {
 		});
 		
 		JLabel fondo = new JLabel("");
-		fondo.setIcon(new ImageIcon(Login.class.getResource("/src/main/resources/AppBG.png")));
+		fondo.setIcon(new ImageIcon(Login.class.getResource("/umu/tds/AppVideo/Resources/AppBG.png")));
 		fondo.setBounds(0, 0, 1280, 720);
 		getContentPane().add(fondo);
 		
