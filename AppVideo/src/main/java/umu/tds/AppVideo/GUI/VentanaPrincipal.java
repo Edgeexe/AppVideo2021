@@ -14,7 +14,9 @@ import javax.swing.JTextField;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.EventObject;
+import java.util.LinkedList;
 import java.awt.Font;
 import javax.swing.SwingConstants;
 import java.awt.Insets;
@@ -23,6 +25,11 @@ import javax.swing.JList;
 import javax.swing.AbstractListModel;
 import javax.swing.Box;
 import javax.swing.border.BevelBorder;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
+
+import dominio.Video;
+
 import javax.swing.JTextPane;
 
 import java.awt.FlowLayout;
@@ -32,7 +39,10 @@ import javax.swing.JToggleButton;
 
 import pulsador.IEncendidoListener;
 import pulsador.Luz;
+import tds.video.VideoWeb;
 import umu.tds.Controlador.Controlador;
+import javax.swing.JTable;
+import javax.swing.JScrollPane;
 
 public class VentanaPrincipal extends JFrame {
 
@@ -40,6 +50,8 @@ public class VentanaPrincipal extends JFrame {
 	private int posX=0;
 	private int	posY=0;
 	private JTextField escribir_busqueda;
+	private JTable tablaVideos;
+	private static VideoWeb vWeb = new VideoWeb();
 	
 	public static void main(String[] args) {
 
@@ -59,6 +71,40 @@ public class VentanaPrincipal extends JFrame {
 		panel_Explorar.setBounds(207, 96, 1073, 624);
 		getContentPane().add(panel_Explorar);
 		panel_Explorar.setLayout(new BorderLayout(0, 0));
+		
+		JPanel panel_resultado = new JPanel();
+		panel_resultado.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
+		panel_resultado.setBackground(Color.LIGHT_GRAY);
+		panel_Explorar.add(panel_resultado, BorderLayout.CENTER);
+		panel_resultado.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		
+		tablaVideos = new JTable();
+		tablaVideos.setDefaultRenderer(getClass(), new VideoLabelTabla());
+		LineaVideos linea = new LineaVideos();
+		LinkedList<LineaVideos> listaLineaVideos = new LinkedList<LineaVideos>();
+		//ArrayList<Video> videosAux  = (ArrayList<Video>) getApp().obtenerVideos();
+		
+		
+		listaLineaVideos.add(linea);
+		TablaVideos tm = new TablaVideos();
+		//tm.rellenarTabla(videosAux, getVideoWeb());
+		
+		tablaVideos.setModel(tm);
+		tablaVideos.setRowHeight(125); //cambio en la altura para que se vean los titulos
+		tablaVideos.getTableHeader().setUI(null);  //Elimina la cabecera
+		TableColumnModel colModel=tablaVideos.getColumnModel();
+		for(int i=0; i<4; i++)
+		{
+			TableColumn col=colModel.getColumn(i);
+			col.setPreferredWidth(145);
+		}
+		
+		tablaVideos.setShowGrid(false);
+		
+		panel_resultado.add(tablaVideos);
+		
+		JScrollPane scrollPane = new JScrollPane(tablaVideos);
+		panel_resultado.add(scrollPane);
 		
 		JPanel panel_este = new JPanel();
 		panel_este.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
@@ -106,12 +152,6 @@ public class VentanaPrincipal extends JFrame {
 		
 		JButton btn_Reset = new JButton("Reset");
 		panel_busqueda.add(btn_Reset);
-		
-		JPanel panel_resultado = new JPanel();
-		panel_resultado.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		panel_resultado.setBackground(Color.LIGHT_GRAY);
-		panel_Explorar.add(panel_resultado, BorderLayout.CENTER);
-		panel_resultado.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		
 		JPanel panel_cabecera = new JPanel();
 		panel_cabecera.setOpaque(false);
@@ -389,7 +429,52 @@ public class VentanaPrincipal extends JFrame {
 				});
 
 	}
+	//TODO: Metodo de reproduccion de videos
+	
+	public static VideoWeb getVideoWeb() {
+		return vWeb;
+	}
 }
+
+
+class LineaVideos {
+	
+	private Video v1, v2, v3, v4;
+	private LinkedList<Video> videos = new LinkedList<>();
+	
+	public LineaVideos() {
+		Video v1 = null, v2 = null, v3 = null, v4 = null;
+		videos.add(v1);
+		videos.add(v2);
+		videos.add(v3);
+		videos.add(v4);
+	}
+	
+	public LineaVideos(Video...videos ) {
+		this();
+		v1 = videos[0];
+		v2 = videos[1];
+		v3 = videos[2];
+		v4 = videos[3];
+	}
+	
+	public Video getVideo1() {
+		return v1;
+	}
+
+	public Video getVideo2() {
+		return v2;
+	}
+
+	public Video getVideo3() {
+		return v3;
+	}
+	
+	public Video getVideo4() {
+		return v4;
+	}
+}
+
 
 class RoundedPanel extends JPanel
 
