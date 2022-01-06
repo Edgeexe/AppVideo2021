@@ -30,5 +30,7 @@
 	<classpathentry kind="lib" path="CargadorVideos.jar"/>
 	<classpathentry kind="lib" path="Luz.jar"/>
 	<classpathentry kind="lib" path="DriverPersistencia.jar"/>
+	<classpathentry kind="lib" path="VideoWeb.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/openjfx-17"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
