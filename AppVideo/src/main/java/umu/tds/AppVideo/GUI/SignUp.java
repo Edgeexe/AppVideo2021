@@ -256,7 +256,7 @@ public class SignUp extends JFrame {
 		
 		JLabel lblNewLabel = new JLabel("");
 		lblNewLabel.setBackground(new Color(0, 153, 255));
-		lblNewLabel.setIcon(new ImageIcon(SignUp.class.getResource("/src/main/resources/SignUpBG.png")));
+		lblNewLabel.setIcon(new ImageIcon(SignUp.class.getResource("/umu/tds/AppVideo/Resources/SignUpBG.png")));
 		lblNewLabel.setBounds(0, 0, 514, 671);
 		panel.add(lblNewLabel);
 		
