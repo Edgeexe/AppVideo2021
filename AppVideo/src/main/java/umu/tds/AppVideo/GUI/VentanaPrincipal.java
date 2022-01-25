@@ -11,6 +11,9 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JTextField;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
@@ -22,6 +25,7 @@ import javax.swing.SwingConstants;
 import java.awt.Insets;
 import java.awt.BorderLayout;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.AbstractListModel;
 import javax.swing.Box;
 import javax.swing.border.BevelBorder;
@@ -40,7 +44,9 @@ import javax.swing.JToggleButton;
 import pulsador.IEncendidoListener;
 import pulsador.Luz;
 import tds.video.VideoWeb;
+import umu.tds.AppVideo.Persistencia.DAOException;
 import umu.tds.Controlador.Controlador;
+
 import javax.swing.JTable;
 import javax.swing.JScrollPane;
 
@@ -82,12 +88,10 @@ public class VentanaPrincipal extends JFrame {
 		tablaVideos.setDefaultRenderer(getClass(), new VideoLabelTabla());
 		LineaVideos linea = new LineaVideos();
 		LinkedList<LineaVideos> listaLineaVideos = new LinkedList<LineaVideos>();
-		//ArrayList<Video> videosAux  = (ArrayList<Video>) getApp().obtenerVideos();
 		
 		
 		listaLineaVideos.add(linea);
 		TablaVideos tm = new TablaVideos();
-		//tm.rellenarTabla(videosAux, getVideoWeb());
 		
 		tablaVideos.setModel(tm);
 		tablaVideos.setRowHeight(125); //cambio en la altura para que se vean los titulos
@@ -147,6 +151,20 @@ public class VentanaPrincipal extends JFrame {
 		
 		JButton boton_buscar = new JButton("Buscar");
 		panel_busqueda.add(boton_buscar);
+		boton_buscar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				LinkedList<Video> videos=new LinkedList<Video>();
+				try {
+					videos=Controlador.getUnicaInstancia().getVideos(escribir_busqueda.getText());
+				} catch (DAOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				if(videos.size()!=0) {
+					tm.rellenarTabla(videos,getVideoWeb());
+				}
+			}
+		});
 		
 		panel_busqueda.add(Box.createRigidArea(new Dimension(30,30)));
 		
@@ -337,7 +355,6 @@ public class VentanaPrincipal extends JFrame {
 					selectorArchivos.showOpenDialog(selectorArchivos);
 					File archivo_xml = selectorArchivos.getSelectedFile(); // obtiene el archivo seleccionado
 					Controlador.getUnicaInstancia().cargarVideos(archivo_xml);
-					//En controlador llamar a cargar video
 				}
 					
 			}

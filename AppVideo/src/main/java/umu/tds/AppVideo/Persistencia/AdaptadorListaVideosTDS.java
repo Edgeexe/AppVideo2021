@@ -4,54 +4,33 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.StringTokenizer;
 
 import beans.Entidad;
 import beans.Propiedad;
 import dominio.ListaVideos;
-import dominio.Video;
 import tds.driver.FactoriaServicioPersistencia;
 import tds.driver.ServicioPersistencia;
 
 public class AdaptadorListaVideosTDS implements IAdaptadorListaVideosDAO{
 	private static ServicioPersistencia servPersistencia;
-	private static AdaptadorListaVideosTDS unicaInstancia;
-
-	public static AdaptadorListaVideosTDS getUnicaInstancia() {
-		if (unicaInstancia == null)
-			return new AdaptadorListaVideosTDS();
-		else
-			return unicaInstancia;
-	}
-
-	private AdaptadorListaVideosTDS() {
+		
+	AdaptadorListaVideosTDS() {
 		servPersistencia = FactoriaServicioPersistencia.getInstance().getServicioPersistencia();
 	}
 
 	public void registrarListaVideos(ListaVideos lv) {
-		Entidad eLv = null;
-		try {
-			eLv = servPersistencia.recuperarEntidad(lv.getCodigo());
-		} catch (NullPointerException e) {}
-		if (eLv != null)	return;
-
-		AdaptadorVideoTDS adaptadorVideo = AdaptadorVideoTDS.getUnicaInstancia();
-		for (Video video : lv.getListaVideos())
-			adaptadorVideo.registrarVideo(video);
-		
+		Entidad eLv = null;		
 		eLv = new Entidad();
-
 		eLv.setNombre("listaVideos");
 		eLv.setPropiedades(new ArrayList<Propiedad>(
 				Arrays.asList(new Propiedad("nombre", String.valueOf(lv.getNombre())),
-						new Propiedad("listaVideos", obtenerCodigosListaVideo(lv.getListaVideos())))));
+						new Propiedad("videos",lv.videosToString()))));
 		eLv = servPersistencia.registrarEntidad(eLv);
 		lv.setCodigo(eLv.getId());
 	}
 
 	public void borrarListaVideos(ListaVideos lv) {
 		Entidad eLv;
-		//AdaptadorVideoTDS adaptadorVideo = AdaptadorVideoTDS.getUnicaInstancia();
 		eLv = servPersistencia.recuperarEntidad(lv.getCodigo());
 		servPersistencia.borrarEntidad(eLv);
 
@@ -65,9 +44,8 @@ public class AdaptadorListaVideosTDS implements IAdaptadorListaVideosDAO{
 				prop.setValor(String.valueOf(lv.getCodigo()));
 			} else if (prop.getNombre().equals("nombre")) {
 				prop.setValor(String.valueOf(lv.getNombre()));
-			} else if (prop.getNombre().equals("listaVideos")) {
-				String lineas = obtenerCodigosListaVideo(lv.getListaVideos());
-				prop.setValor(lineas);
+			} else if (prop.getNombre().equals("videos")) {
+				prop.setValor(lv.videosToString());
 			}
 			servPersistencia.modificarPropiedad(prop);
 		}
@@ -77,16 +55,14 @@ public class AdaptadorListaVideosTDS implements IAdaptadorListaVideosDAO{
 		Entidad eLv = servPersistencia.recuperarEntidad(codigo);
 
 		String nombre = String.valueOf(servPersistencia.recuperarPropiedadEntidad(eLv, "nombre"));
-		
-		ListaVideos nuevaListaVideos = new ListaVideos(nombre);
-		nuevaListaVideos.setCodigo(codigo);
-		List<Video> videos = obtenerListaVideosDesdeCodigos(
-				servPersistencia.recuperarPropiedadEntidad(eLv, "listaVideos"));
+		String v=  servPersistencia.recuperarPropiedadEntidad(eLv,"videos");
+		String[] videos=v.split(" ");
+		ListaVideos l=new ListaVideos(nombre);
+		for (String video : videos) {
+			l.addVideo(AdaptadorVideoTDS.getInstance().recuperarVideo(Integer.parseInt(video)));
+		}
 
-		for (Video video : videos)
-			nuevaListaVideos.addVideo(video);
-
-		return nuevaListaVideos;
+		return l;
 	}
 
 	public List<ListaVideos> recuperarTodasListasVideos() {
@@ -97,23 +73,5 @@ public class AdaptadorListaVideosTDS implements IAdaptadorListaVideosDAO{
 			listasVideos.add(recuperarListaVideos(eListaVideo.getId()));
 		}
 		return listasVideos;
-	}
-
-	private String obtenerCodigosListaVideo(List<Video> listaVideos) {
-		String lineas = "";
-		for (Video video : listaVideos) {
-			lineas += video.getCodigo() + " ";
-		}
-		return lineas.trim();
-	}
-
-	private List<Video> obtenerListaVideosDesdeCodigos(String lineas) {
-		List<Video> video = new LinkedList<Video>();
-		StringTokenizer strTok = new StringTokenizer(lineas, " ");
-		AdaptadorVideoTDS adaptadorVideo = AdaptadorVideoTDS.getUnicaInstancia();
-		while (strTok.hasMoreTokens()) {
-			video.add(adaptadorVideo.recuperarVideo(Integer.valueOf((String) strTok.nextElement())));
-		}
-		return video;
 	}
 }

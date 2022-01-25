@@ -25,8 +25,7 @@ public class CatalogoVideos {
 		asistentesPorNombre = new HashMap<String, Video>();
 		
 		try {
-			factoria = FactoriaDAO.getInstancia();
-			
+			factoria = FactoriaDAO.getInstancia();		
 			List<Video> listaVideos = factoria.getVideoDAO().recuperarTodosVideo();
 			for (Video video : listaVideos) {
 				asistentesPorUrl.put(video.getUrl(), video);
@@ -51,6 +50,18 @@ public class CatalogoVideos {
 	
 	public void removeVideo(Video video) {
 		asistentesPorUrl.remove(video.getUrl());
+	}
+
+	public void anadirVideos(List<umu.tds.componente.Video> videos) {
+		for (umu.tds.componente.Video video : videos) {
+			addVideo(new Video(video.getURL(),video.getTitulo()));
+		}
+		
+	}
+
+	public LinkedList<Video> getVideosdeCodigo(List<String> codigos) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

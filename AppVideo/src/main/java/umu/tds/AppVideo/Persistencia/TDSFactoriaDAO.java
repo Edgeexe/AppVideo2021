@@ -6,26 +6,17 @@ public class TDSFactoriaDAO extends FactoriaDAO {
 	
 	@Override
 	public IAdaptadorUsuarioDAO getUsuarioDAO() {
-		return AdaptadorUsuarioTDS.getUnicaInstancia();
+		return new AdaptadorUsuarioTDS();
 	}
 
 	@Override
 	public IAdaptadorVideoDAO getVideoDAO() {
-		return AdaptadorVideoTDS.getUnicaInstancia();
-	}
-
-	@Override
-	public IAdaptadorFiltroDAO getFiltroDAO() {
-		return AdaptadorFiltroTDS.getUnicaInstancia();
+		return new AdaptadorVideoTDS();
 	}
 
 	@Override
 	public IAdaptadorListaVideosDAO getListaVideosDAO() {
-		return AdaptadorListaVideosTDS.getUnicaInstancia();
+		return new AdaptadorListaVideosTDS();
 	}
-	
-	@Override
-	public IAdaptadorEtiquetaDAO getEtiquetaDAO() {
-		return AdaptadorEtiquetaTDS.getUnicaInstancia();
-	}
+
 }

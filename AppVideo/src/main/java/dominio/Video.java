@@ -69,8 +69,15 @@ public class Video {
 	public void anadirEtiqueta(Etiqueta e) {
 		etiquetas.add(e);
 	}
-	
-	
-	
 
+
+
+	public String etiquetaToString() {
+		String etiquetas= "";
+		for(Etiqueta e : this.etiquetas) {
+			etiquetas += e.getEtiqueta() + " ";
+		}
+		return etiquetas.trim();
+	}
 }
+	

@@ -4,10 +4,15 @@ import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.EventObject;
+import java.util.LinkedList;
+import java.util.List;
 
 import dominio.*;
+import dominio.Video;
 import umu.tds.AppVideo.Persistencia.*;
-import umu.tds.componente.*;
+import umu.tds.componente.Videos;
+import umu.tds.componente.VideosEvent;
+import umu.tds.componente.VideosListener;
 
 public class Controlador implements VideosListener {
 	private Usuario usuarioActual;
@@ -23,16 +28,15 @@ public class Controlador implements VideosListener {
 		Videos vi=new Videos();
 		vi.addVideosListene(getUnicaInstancia());
 		vi.setArchivoVideos(archivo_xml);
-		
 	}
 
 	@Override
 	public void nuevosVideos(EventObject event) {
 		//Si han llegado nuevos videos incluirlos en el catálogo de videos
 		if(event instanceof VideosEvent){
-		  //VideosEvent ev=(VideosEvent)event;
-		  //Añadir los videos ev al Catalogo
-		 }
+		  VideosEvent ev=(VideosEvent)event;
+		  CatalogoVideos.getUnicaInstancia().anadirVideos(ev.getVideos());
+		}
 	}
 	
 	public Usuario getUsuarioActual() {
@@ -76,6 +80,15 @@ public class Controlador implements VideosListener {
 
 		CatalogoUsuarios.getUnicaInstancia().removeUsuario(usuario);
 		return true;
+	}
+
+	public LinkedList<Video> getVideos(String text) throws DAOException {
+		LinkedList<Video> devolver=new LinkedList<Video>();
+		List<Video> videos=CatalogoVideos.getUnicaInstancia().getVideos();
+		for (Video video : videos) {
+			if(video.getTitulo().contains(text)) devolver.add(video);
+		}
+		return devolver ;
 	}
 	
 }

@@ -165,6 +165,20 @@ public class Usuario {
 		
 	}
 	
+	public String ListaVideosToString() {
+		String listaVideos = "";
+		for(ListaVideos lista : this.listasVideos) {
+			listaVideos += lista.getCodigo() + " ";
+		}
+		return listaVideos;
+	}
 	
+	public String videosRecienetsToString() {
+		String recientes= "";
+		for(Video video : this.recientes) {
+			recientes += video.getCodigo() + " ";
+		}
+		return recientes.trim();
+	}
 
 }

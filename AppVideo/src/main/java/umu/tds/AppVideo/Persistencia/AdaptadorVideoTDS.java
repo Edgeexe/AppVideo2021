@@ -15,49 +15,45 @@ import tds.driver.FactoriaServicioPersistencia;
 import tds.driver.ServicioPersistencia;
 
 public class AdaptadorVideoTDS implements IAdaptadorVideoDAO{
+	private static AdaptadorVideoTDS instancia;
 	private static ServicioPersistencia servPersistencia;
-	private static AdaptadorVideoTDS unicaInstancia = null;
-	
-	public static AdaptadorVideoTDS getUnicaInstancia() {
-		if (unicaInstancia == null)
-			return new AdaptadorVideoTDS();
-		else
-			return unicaInstancia;
-	}
-
-	private AdaptadorVideoTDS() {
+	AdaptadorVideoTDS() {
 		servPersistencia = FactoriaServicioPersistencia.getInstance().getServicioPersistencia();
 	}
+	
+	public static AdaptadorVideoTDS getInstance() {
+		if (instancia == null) {
+			return new AdaptadorVideoTDS();
+		}
+		return instancia;
+	}
 
-	public void registrarVideo(Video video) {
-		Entidad eVideo = null;
-		try {
-			eVideo = servPersistencia.recuperarEntidad(video.getCodigo());
-		} catch (NullPointerException e) {}
-		if (eVideo != null)	return;
-		
-		AdaptadorEtiquetaTDS adaptadorEtiqueta = AdaptadorEtiquetaTDS.getUnicaInstancia();
-		for (Etiqueta v : video.getEtiquetas())
-			adaptadorEtiqueta.registrarEtiqueta(v);
-		
-		eVideo = new Entidad();
-
+	public void registrarVideo(Video video) {		
+		if (estaRegistrado(video.getCodigo()))
+			return;
+		Entidad eVideo = new Entidad();
 		eVideo.setNombre("video");
 		eVideo.setPropiedades(new ArrayList<Propiedad>(
 				Arrays.asList(new Propiedad("titulo", String.valueOf(video.getTitulo())),
 						new Propiedad("numRepro", String.valueOf(video.getNumRepro())),
 						new Propiedad("url", String.valueOf(video.getUrl())),
-						new Propiedad("etiquetas", obtenerCodigosEtiquetas(video.getEtiquetas())))));
+						new Propiedad("etiquetas", video.etiquetaToString()))));
 		eVideo = servPersistencia.registrarEntidad(eVideo);
+		video.setCodigo(eVideo.getId());
 	}
+
+	private boolean estaRegistrado(int id) {
+		try {
+			servPersistencia.recuperarEntidad(id);
+		} catch (NullPointerException e) {
+			return false;
+		}
+		return true;
+	}
+	
 
 	public void borrarVideo(Video video) {
 		Entidad eVideo;
-		AdaptadorEtiquetaTDS adaptadorE = AdaptadorEtiquetaTDS.getUnicaInstancia();
-
-		for (Etiqueta etiqueta : video.getEtiquetas()) {
-			adaptadorE.borrarEtiqueta(etiqueta);
-		}
 		eVideo = servPersistencia.recuperarEntidad(video.getCodigo());
 		servPersistencia.borrarEntidad(eVideo);
 
@@ -76,8 +72,7 @@ public class AdaptadorVideoTDS implements IAdaptadorVideoDAO{
 			} else if (prop.getNombre().equals("numRepro")) {
 				prop.setValor(String.valueOf(video.getNumRepro()));
 			} else if (prop.getNombre().equals("etiquetas")) {
-				String lineas = obtenerCodigosEtiquetas(video.getEtiquetas());
-				prop.setValor(lineas);
+				prop.setValor(video.etiquetaToString());
 			}
 			servPersistencia.modificarPropiedad(prop);
 		}
@@ -90,15 +85,13 @@ public class AdaptadorVideoTDS implements IAdaptadorVideoDAO{
 		String titulo = servPersistencia.recuperarPropiedadEntidad(eVideo, "titulo");
 		String url = servPersistencia.recuperarPropiedadEntidad(eVideo, "url");
 		int numRepro = Integer.parseInt(servPersistencia.recuperarPropiedadEntidad(eVideo, "numRepro"));
-		
 		Video video = new Video(titulo, url);
 		video.setNumRepro(numRepro);
 		video.setCodigo(codigo);
-		Set<Etiqueta> etiquetas = obtenerEtiquetasDesdeCodigos(
-				servPersistencia.recuperarPropiedadEntidad(eVideo, "etiquetas"));
-
-		for (Etiqueta e : etiquetas)
-			video.anadirEtiqueta(e);
+		String etiquetas = servPersistencia.recuperarPropiedadEntidad(eVideo, "etiquetas");
+			String[] e = etiquetas.split(" ");
+		for (String eti : e)
+			video.anadirEtiqueta(new Etiqueta(eti));
 
 		return video;
 	}
@@ -113,21 +106,4 @@ public class AdaptadorVideoTDS implements IAdaptadorVideoDAO{
 		return videos;
 	}
 
-	private String obtenerCodigosEtiquetas(Set<Etiqueta> etiquetas) {
-		String lineas = "";
-		for (Etiqueta etiqueta : etiquetas) {
-			lineas += etiqueta.getCodigo() + " ";
-		}
-		return lineas.trim();
-	}
-
-	private Set<Etiqueta> obtenerEtiquetasDesdeCodigos(String lineas) {
-		Set<Etiqueta> etiquetas = new HashSet<Etiqueta>();
-		StringTokenizer strTok = new StringTokenizer(lineas, " ");
-		AdaptadorEtiquetaTDS adaptadorE = AdaptadorEtiquetaTDS.getUnicaInstancia();
-		while (strTok.hasMoreTokens()) {
-			etiquetas.add(adaptadorE.recuperarEtiqueta(Integer.valueOf((String) strTok.nextElement())));
-		}
-		return etiquetas;
-	}
 }
