@@ -52,13 +52,6 @@ public class CatalogoVideos {
 		asistentesPorUrl.remove(video.getUrl());
 	}
 
-	public void anadirVideos(List<umu.tds.componente.Video> videos) {
-		for (umu.tds.componente.Video video : videos) {
-			addVideo(new Video(video.getURL(),video.getTitulo()));
-		}
-		
-	}
-
 	public LinkedList<Video> getVideosdeCodigo(List<String> codigos) {
 		// TODO Auto-generated method stub
 		return null;

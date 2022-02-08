@@ -6,9 +6,9 @@ import dominio.Usuario;
 
 public interface IAdaptadorUsuarioDAO {
 
-	public void registrarUsuario(Usuario usuario);
-	public void borrarUsuario(Usuario usuario);
-	public void modificarUsuario(Usuario usuario);
-	public Usuario recuperarUsuario(int codigo);
-	public List<Usuario> recuperarTodosUsuarios();
+	void create(Usuario asistente);
+	boolean delete(Usuario asistente);
+	void update(Usuario asistente);
+	Usuario get(int id);
+	List<Usuario> getAll();
 }

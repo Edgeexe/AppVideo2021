@@ -26,7 +26,7 @@ public class CatalogoUsuarios {
 		try {
 			factoria = FactoriaDAO.getInstancia();
 			
-			List<Usuario> listaAsistentes = factoria.getUsuarioDAO().recuperarTodosUsuarios();
+			List<Usuario> listaAsistentes = factoria.getUsuarioDAO().getAll();
 			for (Usuario usuario : listaAsistentes) {
 				asistentesPorID.put(usuario.getCodigo(), usuario);
 			}

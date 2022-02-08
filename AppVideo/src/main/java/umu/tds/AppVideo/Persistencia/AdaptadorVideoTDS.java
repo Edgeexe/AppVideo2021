@@ -2,11 +2,8 @@ package umu.tds.AppVideo.Persistencia;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
-import java.util.StringTokenizer;
 
 import beans.Entidad;
 import beans.Propiedad;
@@ -29,28 +26,25 @@ public class AdaptadorVideoTDS implements IAdaptadorVideoDAO{
 	}
 
 	public void registrarVideo(Video video) {		
-		if (estaRegistrado(video.getCodigo()))
-			return;
-		Entidad eVideo = new Entidad();
+		Entidad eVideo=null;
+		try {
+			eVideo=servPersistencia.recuperarEntidad(video.getCodigo());			
+		} catch (NullPointerException e) {}
+		if(eVideo !=null) return;
+		eVideo=new Entidad();
 		eVideo.setNombre("video");
-		eVideo.setPropiedades(new ArrayList<Propiedad>(
-				Arrays.asList(new Propiedad("titulo", String.valueOf(video.getTitulo())),
-						new Propiedad("numRepro", String.valueOf(video.getNumRepro())),
-						new Propiedad("url", String.valueOf(video.getUrl())),
-						new Propiedad("etiquetas", video.etiquetaToString()))));
-		eVideo = servPersistencia.registrarEntidad(eVideo);
+		eVideo.setPropiedades(
+				new ArrayList<Propiedad>(Arrays.asList(
+						  new Propiedad("url",String.valueOf(video.getUrl())),
+						  new Propiedad("titulo",String.valueOf(video.getTitulo())),
+						  new Propiedad("numRepro",String.valueOf(video.getNumRepro())),
+						  new Propiedad("etiquetas",String.valueOf(video.etiquetaToString()))
+						)
+					)
+				);
+		eVideo=servPersistencia.registrarEntidad(eVideo);
 		video.setCodigo(eVideo.getId());
 	}
-
-	private boolean estaRegistrado(int id) {
-		try {
-			servPersistencia.recuperarEntidad(id);
-		} catch (NullPointerException e) {
-			return false;
-		}
-		return true;
-	}
-	
 
 	public void borrarVideo(Video video) {
 		Entidad eVideo;
@@ -80,19 +74,14 @@ public class AdaptadorVideoTDS implements IAdaptadorVideoDAO{
 
 	public Video recuperarVideo(int codigo) {
 		Entidad eVideo = servPersistencia.recuperarEntidad(codigo);
-
-		
+		Video video = null;
 		String titulo = servPersistencia.recuperarPropiedadEntidad(eVideo, "titulo");
 		String url = servPersistencia.recuperarPropiedadEntidad(eVideo, "url");
 		int numRepro = Integer.parseInt(servPersistencia.recuperarPropiedadEntidad(eVideo, "numRepro"));
-		Video video = new Video(titulo, url);
-		video.setNumRepro(numRepro);
-		video.setCodigo(codigo);
 		String etiquetas = servPersistencia.recuperarPropiedadEntidad(eVideo, "etiquetas");
-			String[] e = etiquetas.split(" ");
-		for (String eti : e)
-			video.anadirEtiqueta(new Etiqueta(eti));
-
+		String[] e = etiquetas.split(" ");
+		video=new Video(url,titulo,Arrays.asList(e));
+		video.setNumRepro(numRepro);
 		return video;
 	}
 

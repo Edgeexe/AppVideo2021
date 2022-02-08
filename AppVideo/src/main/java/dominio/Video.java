@@ -10,12 +10,18 @@ public class Video {
 	private int numRepro;
 	private HashSet<Etiqueta> etiquetas;
 	
-	public Video(String url,String titulo) {
+	public Video(String url,String titulo,List<String>etiquetas) {
 		this.codigo=0;
 		this.url=url;
 		this.titulo=titulo;
 		this.numRepro=0;
-		this.etiquetas=new HashSet<Etiqueta>();
+		if(etiquetas.isEmpty())this.etiquetas=new HashSet<Etiqueta>();
+		else {
+			this.etiquetas=new HashSet<Etiqueta>();
+			for (String etiqueta : etiquetas) {
+				this.etiquetas.add(new Etiqueta(etiqueta));
+			}
+		}
 	}
 	
 	
@@ -69,7 +75,6 @@ public class Video {
 	public void anadirEtiqueta(Etiqueta e) {
 		etiquetas.add(e);
 	}
-
 
 
 	public String etiquetaToString() {

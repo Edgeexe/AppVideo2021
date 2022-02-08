@@ -11,13 +11,13 @@ public class Usuario {
 	private String usuario;
 	private String email;
 	private String contraseña;
-	private Date fecha;
+	private String fecha;
 	private boolean premium;
 	private List<ListaVideos> listasVideos;
 	private List<Video> recientes;
 	private Filtro filtro;
 	
-	public Usuario(String nombre, String apellidos, Date fecha, String email, String usuario,
+	public Usuario(String nombre, String apellidos, String fecha, String email, String usuario,
 			String contrasena) {
 		this.codigo = 0;
 		this.nombre = nombre;
@@ -85,7 +85,7 @@ public class Usuario {
 	}
 
 
-	public Date getFecha() {
+	public String getFecha() {
 		return fecha;
 	}
 
@@ -148,7 +148,7 @@ public class Usuario {
 
 
 
-	public void setFecha(Date fecha) {
+	public void setFecha(String fecha) {
 		this.fecha = fecha;
 	}
 
