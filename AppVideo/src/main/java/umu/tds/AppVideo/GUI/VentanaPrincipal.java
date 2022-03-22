@@ -186,7 +186,7 @@ public class VentanaPrincipal extends JFrame {
 		logo.setBounds(45, 5, 100, 95);
 		panel_cabecera.add(logo);
 		
-		JLabel textoUsuario = new JLabel("Usuario");
+		JLabel textoUsuario = new JLabel(Controlador.getUnicaInstancia().getUsuarioActual().getUsuario());
 		textoUsuario.setFont(new Font("Lato Black", Font.BOLD, 15));
 		textoUsuario.setForeground(Color.WHITE);
 		textoUsuario.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/umu/tds/AppVideo/Resources/UserIcon.png")));
@@ -345,6 +345,14 @@ public class VentanaPrincipal extends JFrame {
 		boton_Logout.setFocusPainted(false);
 		boton_Logout.setBounds(19, 548, 169, 58);
 		panel_botones.add(boton_Logout);
+		boton_Logout.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e) {
+				Login login = new Login();
+				login.mostarVentana();
+				dispose();
+			}
+		});
+			
 		
 		Luz luz = new Luz();
 		luz.color = Color.YELLOW;
@@ -453,6 +461,10 @@ public class VentanaPrincipal extends JFrame {
 	
 	public static VideoWeb getVideoWeb() {
 		return vWeb;
+	}
+	
+	public void mostarVentana() {
+		this.setVisible(true);
 	}
 }
 

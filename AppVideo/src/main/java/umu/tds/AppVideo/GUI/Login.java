@@ -3,6 +3,7 @@ package umu.tds.AppVideo.GUI;
 import javax.swing.*;
 
 import umu.tds.AppVideo.Persistencia.DAOException;
+import umu.tds.Controlador.Controlador;
 
 import java.awt.*;
 import java.awt.event.FocusEvent;
@@ -47,8 +48,8 @@ public class Login extends JFrame {
 			public void mouseClicked(MouseEvent e) {
 				if(e.getButton()==MouseEvent.BUTTON1) {
 					JFrame ventana2=new SignUp();
-					ventana2.setVisible(true);
-					setVisible(false);
+					((SignUp) ventana2).mostrarVentana();
+					dispose();
 				}
 			}
 		});
@@ -76,14 +77,20 @@ public class Login extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if(e.getButton()==MouseEvent.BUTTON1) {
-					JFrame ventana;
-					try {
-						ventana = new VentanaPrincipal();
-						ventana.setVisible(true);
-					} catch (DAOException e1) {
-						e1.printStackTrace();
+					VentanaPrincipal ventana;
+					boolean login=Controlador.getUnicaInstancia().loginUsuario(txtUsername.getText(),pwdPassword.getText());
+					if(login) {
+						try {
+							ventana = new VentanaPrincipal();
+							ventana.mostarVentana();
+						} catch (DAOException e1) {
+							e1.printStackTrace();
+						}
+						dispose();
 					}
-					dispose();
+					else {
+						JOptionPane.showMessageDialog(new Login(), "Nombre de usuario o contraseña no valido","Error", JOptionPane.ERROR_MESSAGE);
+					}
 				}
 			}
 		});
@@ -220,13 +227,10 @@ public class Login extends JFrame {
 
 	}
 	
-	
-	public static void main(String[] args) {
-
-		        JFrame frame = new Login();
-		        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
-		        frame.setVisible(true);
+	public void mostarVentana() {
+		this.setVisible(true);
 	}
+	
 }
 
 class HintTextField extends JTextField implements FocusListener {
