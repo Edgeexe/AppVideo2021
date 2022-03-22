@@ -58,14 +58,15 @@ public class VentanaPrincipal extends JFrame {
 	private JTextField escribir_busqueda;
 	private JTable tablaVideos;
 	private static VideoWeb vWeb = new VideoWeb();
+	private Controlador appVideo = new Controlador();
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws DAOException {
 
         JFrame frame = new VentanaPrincipal();
         frame.setVisible(true);
 }
 	
-	public VentanaPrincipal() {
+	public VentanaPrincipal() throws DAOException {
 		setBounds(new Rectangle(100, 100, 1280, 720));
 		setLocationRelativeTo(null);
 		setUndecorated(true);
@@ -82,32 +83,34 @@ public class VentanaPrincipal extends JFrame {
 		panel_resultado.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		panel_resultado.setBackground(Color.LIGHT_GRAY);
 		panel_Explorar.add(panel_resultado, BorderLayout.CENTER);
-		panel_resultado.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		
 		tablaVideos = new JTable();
+		tablaVideos.setBounds(1, 26, 450, 0);
 		tablaVideos.setDefaultRenderer(getClass(), new VideoLabelTabla());
 		LineaVideos linea = new LineaVideos();
 		LinkedList<LineaVideos> listaLineaVideos = new LinkedList<LineaVideos>();
-		
+		ArrayList<Video> videosAux  = (ArrayList<Video>) appVideo.getVideos();
 		
 		listaLineaVideos.add(linea);
 		TablaVideos tm = new TablaVideos();
 		
 		tablaVideos.setModel(tm);
-		tablaVideos.setRowHeight(125); //cambio en la altura para que se vean los titulos
+		tablaVideos.setRowHeight(200); //cambio en la altura para que se vean los titulos
 		tablaVideos.getTableHeader().setUI(null);  //Elimina la cabecera
 		TableColumnModel colModel=tablaVideos.getColumnModel();
-		for(int i=0; i<4; i++)
+		for(int i=0; i<6; i++)
 		{
 			TableColumn col=colModel.getColumn(i);
 			col.setPreferredWidth(145);
 		}
+		panel_resultado.setLayout(null);
 		
 		tablaVideos.setShowGrid(false);
 		
 		panel_resultado.add(tablaVideos);
 		
 		JScrollPane scrollPane = new JScrollPane(tablaVideos);
+		scrollPane.setBounds(0, 0, 979, 590);
 		panel_resultado.add(scrollPane);
 		
 		JPanel panel_este = new JPanel();
@@ -456,15 +459,17 @@ public class VentanaPrincipal extends JFrame {
 
 class LineaVideos {
 	
-	private Video v1, v2, v3, v4;
+	private Video v1, v2, v3, v4, v5, v6;
 	private LinkedList<Video> videos = new LinkedList<>();
 	
 	public LineaVideos() {
-		Video v1 = null, v2 = null, v3 = null, v4 = null;
+		Video v1 = null, v2 = null, v3 = null, v4 = null, v5 = null, v6 = null;
 		videos.add(v1);
 		videos.add(v2);
 		videos.add(v3);
 		videos.add(v4);
+		videos.add(v5);
+		videos.add(v6);
 	}
 	
 	public LineaVideos(Video...videos ) {
@@ -473,6 +478,8 @@ class LineaVideos {
 		v2 = videos[1];
 		v3 = videos[2];
 		v4 = videos[3];
+		v5 = videos[4];
+		v6 = videos[5];
 	}
 	
 	public Video getVideo1() {
@@ -489,6 +496,14 @@ class LineaVideos {
 	
 	public Video getVideo4() {
 		return v4;
+	}
+	
+	public Video getVideo5() {
+		return v5;
+	}
+	
+	public Video getVideo6() {
+		return v6;
 	}
 }
 

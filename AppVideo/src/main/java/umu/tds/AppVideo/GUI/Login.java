@@ -1,6 +1,9 @@
 package umu.tds.AppVideo.GUI;
 
 import javax.swing.*;
+
+import umu.tds.AppVideo.Persistencia.DAOException;
+
 import java.awt.*;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
@@ -73,8 +76,13 @@ public class Login extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if(e.getButton()==MouseEvent.BUTTON1) {
-					JFrame ventana=new VentanaPrincipal();
-					ventana.setVisible(true);
+					JFrame ventana;
+					try {
+						ventana = new VentanaPrincipal();
+						ventana.setVisible(true);
+					} catch (DAOException e1) {
+						e1.printStackTrace();
+					}
 					dispose();
 				}
 			}

@@ -3,6 +3,7 @@ package umu.tds.Controlador;
 import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.EventObject;
 import java.util.LinkedList;
 import java.util.List;
@@ -30,7 +31,7 @@ public class Controlador implements VideosListener {
 		return unicaInstancia;
 	}
 	
-	private Controlador() {
+	public Controlador() {
 		inicilaizarAdaptadores();
 		inicializarCatalogos();
 	}
@@ -127,6 +128,14 @@ public class Controlador implements VideosListener {
 		List<Video> videos=catalogoVideos.getVideos();
 		for (Video video : videos) {
 			if(video.getTitulo().contains(text)) devolver.add(video);
+		}
+		return devolver ;
+	}
+	public ArrayList<Video> getVideos() throws DAOException {
+		ArrayList<Video> devolver=new ArrayList<Video>();
+		List<Video> videos=catalogoVideos.getVideos();
+		for (Video video : videos) {
+			devolver.add(video);
 		}
 		return devolver ;
 	}
