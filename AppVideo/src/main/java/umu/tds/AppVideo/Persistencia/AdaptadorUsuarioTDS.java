@@ -31,6 +31,8 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO{
 	private static final String LOGIN = "login";
 	private static final String PASSWORD = "password";
 	private static final String FECHA_NACIMIENTO = "fechaNacimiento";
+	private static final String RECIENTES = "recientes";
+	private static final String MIS_LISTAS = "mis_listas";
 
 	private Usuario entidadToUsuario(Entidad eUsuario) {
 
@@ -40,9 +42,15 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO{
 		String login = servPersistencia.recuperarPropiedadEntidad(eUsuario, LOGIN);
 		String password = servPersistencia.recuperarPropiedadEntidad(eUsuario, PASSWORD);
 		String fechaNacimiento = servPersistencia.recuperarPropiedadEntidad(eUsuario, FECHA_NACIMIENTO);
+		List<Video> recientes=new LinkedList<Video>();
+		List<ListaVideos> listas=new LinkedList<ListaVideos>();
+		recientes=obtenerRecientesDesdeCodigos(servPersistencia.recuperarPropiedadEntidad(eUsuario,RECIENTES));
+		listas=obtenerListasDesdeCodigos(servPersistencia.recuperarPropiedadEntidad(eUsuario,MIS_LISTAS));
 
 		Usuario usuario = new Usuario(nombre, apellidos, fechaNacimiento,email, login, password);
 		usuario.setCodigo(eUsuario.getId());
+		usuario.setRecientes(recientes);
+		usuario.setListasVideos(listas);
 
 		return usuario;
 	}
@@ -53,14 +61,67 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO{
 		if (eUser!=null)
 			return;
 		 eUser = new Entidad();
+		 AdaptadorListaVideosTDS adaptadorLista=AdaptadorListaVideosTDS.getInstance();
+		 AdaptadorVideoTDS adaptadorVideo=AdaptadorVideoTDS.getInstance();
+		 
+		 for(Video reciente: usuario.getRecientes()) {
+			 adaptadorVideo.registrarVideo(reciente);
+		 }
+		 
+		 for(ListaVideos lista: usuario.getListasVideos()) {
+			 adaptadorLista.registrarListaVideos(lista);
+		 }
+		 
 		eUser.setNombre(USUARIO);
 		eUser.setPropiedades(new ArrayList<Propiedad>(Arrays.asList(new Propiedad(NOMBRE, usuario.getNombre()),
 				new Propiedad(APELLIDOS, usuario.getApellidos()), new Propiedad(EMAIL, usuario.getEmail()),
 				new Propiedad(LOGIN, usuario.getUsuario()), new Propiedad(PASSWORD, usuario.getContrasena()),
-				new Propiedad(FECHA_NACIMIENTO, usuario.getFecha()))));
+				new Propiedad(FECHA_NACIMIENTO, usuario.getFecha()),new Propiedad(RECIENTES,obtenerCodigosRecientes(usuario.getRecientes())),
+				new Propiedad(MIS_LISTAS,obtenerCodigosListas(usuario.getListasVideos())))));
 		eUser = servPersistencia.registrarEntidad(eUser);
 		usuario.setCodigo(eUser.getId());
 	}
+
+	private String obtenerCodigosListas(List<ListaVideos> listasVideos) {
+		String lineas = "";
+		 for (ListaVideos listaVideos : listasVideos) {
+		 lineas += listaVideos.getCodigo() + " ";
+		 }
+		 return lineas.trim();
+	}
+
+
+	private String obtenerCodigosRecientes(List<Video> recientes) {
+		String lineas = "";
+		 for (Video video : recientes) {
+		 lineas += video.getCodigo() + " ";
+		 }
+		 return lineas.trim();
+	}
+	
+	private List<Video> obtenerRecientesDesdeCodigos(String lineas) {
+		 List<Video> lineasVenta = new LinkedList<Video>();
+		 StringTokenizer strTok = new StringTokenizer(lineas, " ");
+		 AdaptadorVideoTDS adaptadorLV = AdaptadorVideoTDS.getInstance();
+		 while (strTok.hasMoreTokens()) {
+		 lineasVenta.add(adaptadorLV.recuperarVideo(
+		Integer.valueOf((String) strTok.nextElement())));
+		 }
+		 return lineasVenta;
+		 }
+
+private List<ListaVideos> obtenerListasDesdeCodigos(String lineas) {
+	 List<ListaVideos> lineasVenta = new LinkedList<ListaVideos>();
+	 StringTokenizer strTok = new StringTokenizer(lineas, " ");
+	 AdaptadorListaVideosTDS adaptadorLV =
+	AdaptadorListaVideosTDS.getInstance();
+	 while (strTok.hasMoreTokens()) {
+	 lineasVenta.add(adaptadorLV.recuperarListaVideos(
+	Integer.valueOf((String) strTok.nextElement())));
+	 }
+	 return lineasVenta;
+	 }
+
 
 	public boolean delete(Usuario usuario) {
 		Entidad eUsuario;

@@ -23,33 +23,28 @@ public class AppTest
 		FactoriaDAO dao=FactoriaDAO.getInstancia(FactoriaDAO.DAO_TDS);
 		IAdaptadorUsuarioDAO adaptadorUsuario=dao.getUsuarioDAO();
 		IAdaptadorVideoDAO adaptadorVideo=dao.getVideoDAO();
+		IAdaptadorListaVideosDAO adaptadorLista=dao.getListaVideosDAO();
 		List<String> etiquetas=new LinkedList<String>();
 		etiquetas.add("Musica");
-		Usuario u1=new Usuario("Javi","Jimenez Hernandez","13/11/2001","javitenista46@gmail.com","chof16","12345678");
-		Usuario u2=new Usuario("Pepe","Martinez Hernandez","13/11/2001","mskha46@gmail.com","manolo","ddd");
+		Usuario u1=new Usuario("Javi","Jimenez Hernandez","13/11/2001","javitenista46@gmail.com","prueba1","12345678");
 		Video v1=new Video("https://www.youtube.com/watch?v=l5TMjYj-8MQ","Becky G - Bella Ciao (Official Video)",etiquetas);
 		Video v2=new Video("https://www.youtube.com/watch?v=zEf423kYfqk","Becky G, Natti Natasha - Sin Pijama (Official Video)",etiquetas);
-		adaptadorUsuario.create(u1);
-		adaptadorUsuario.create(u2);
-		adaptadorUsuario.create(u2);
-		adaptadorVideo.registrarVideo(v1);
-		adaptadorVideo.registrarVideo(v2);
-		adaptadorVideo.registrarVideo(v2);
-		List<Usuario> usuarios=adaptadorUsuario.getAll();
+		ListaVideos lista1=new ListaVideos("lista_prueba",v1,v2);
+		List<ListaVideos> lisu1=u1.getListasVideos();
+		lisu1.add(lista1);
+		u1.setListasVideos(lisu1);
+		List<Video> rec=new LinkedList<Video>();
+		rec.add(v1);
+		rec.add(v2);
+		u1.setRecientes(rec);
+		//adaptadorUsuario.create(u1);
+		Usuario usuario=adaptadorUsuario.get(u1.getCodigo());
 		List<Video> videos=adaptadorVideo.recuperarTodosVideo();
-		for (Usuario usuario : usuarios) {
-			System.out.println("Usuario cod: "+usuario.getCodigo()+" -nombre: "+usuario.getNombre()+" -apellidos"
-					+usuario.getApellidos()+" -nombreUsuario: "+usuario.getUsuario()+" -fecha nacimiento: "+(usuario.getFecha()));
-		}
-		
-		for (Video video : videos) {
-			System.out.println("URL: "+video.getUrl()+" Nombre: "+video.getTitiulo()+" Etiquetas: "+video.etiquetaToString());
-		}
-		
 		adaptadorUsuario.delete(u1);
-		adaptadorUsuario.delete(u2);
 		adaptadorVideo.borrarVideo(v1);
 		adaptadorVideo.borrarVideo(v2);
+		adaptadorLista.borrarListaVideos(lista1);
+		
 		
 	}
 	

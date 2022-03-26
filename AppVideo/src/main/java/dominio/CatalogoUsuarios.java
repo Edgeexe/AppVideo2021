@@ -29,6 +29,7 @@ public class CatalogoUsuarios {
 			List<Usuario> listaAsistentes = factoria.getUsuarioDAO().getAll();
 			for (Usuario usuario : listaAsistentes) {
 				asistentesPorID.put(usuario.getCodigo(), usuario);
+				asistentesPorLogin.put(usuario.getUsuario(), usuario);
 			}
 		} catch (DAOException eDAO) {
 			   eDAO.printStackTrace();

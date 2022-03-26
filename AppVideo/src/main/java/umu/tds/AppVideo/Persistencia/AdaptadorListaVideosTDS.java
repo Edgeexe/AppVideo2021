@@ -13,9 +13,16 @@ import tds.driver.ServicioPersistencia;
 
 public class AdaptadorListaVideosTDS implements IAdaptadorListaVideosDAO{
 	private static ServicioPersistencia servPersistencia;
+	private static AdaptadorListaVideosTDS unicaInstancia;
 		
 	AdaptadorListaVideosTDS() {
 		servPersistencia = FactoriaServicioPersistencia.getInstance().getServicioPersistencia();
+	}
+	
+	public static AdaptadorListaVideosTDS getInstance() {
+		if (unicaInstancia == null)
+			 return new AdaptadorListaVideosTDS();
+			 else return unicaInstancia;
 	}
 
 	public void registrarListaVideos(ListaVideos lv) {
@@ -74,4 +81,6 @@ public class AdaptadorListaVideosTDS implements IAdaptadorListaVideosDAO{
 		}
 		return listasVideos;
 	}
+
+
 }

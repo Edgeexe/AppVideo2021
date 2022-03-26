@@ -9,10 +9,13 @@ public class ListaVideos {
 	private List<Video> videos;
 	
 	
-	public ListaVideos(String nombre) {
+	public ListaVideos(String nombre,Video ...videos) {
 		this.codigo=0;
 		this.nombre = nombre;
-		this.videos=new LinkedList<Video>();
+		if(videos.length==0) this.videos=new LinkedList<Video>();
+		else {
+			this.videos=Arrays.asList(videos);
+		}
 	}
 	
 	

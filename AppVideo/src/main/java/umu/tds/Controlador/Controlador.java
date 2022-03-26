@@ -11,6 +11,7 @@ import java.util.List;
 import dominio.*;
 import dominio.Video;
 import umu.tds.AppVideo.Persistencia.*;
+import umu.tds.componente.CargadorVideos;
 import umu.tds.componente.Videos;
 import umu.tds.componente.VideosEvent;
 import umu.tds.componente.VideosListener;
@@ -19,6 +20,7 @@ public class Controlador implements VideosListener {
 	
 	private CatalogoUsuarios catalogoUsuarios;
 	private CatalogoVideos catalogoVideos;
+	private CargadorVideos cargador;
 	
 	private Usuario usuarioActual;
 	
@@ -34,6 +36,8 @@ public class Controlador implements VideosListener {
 	public Controlador() {
 		inicilaizarAdaptadores();
 		inicializarCatalogos();
+		cargador=new CargadorVideos();
+		cargador.addVideosListene(this);
 	}
 
 	private void inicializarCatalogos() {
@@ -54,9 +58,7 @@ public class Controlador implements VideosListener {
 	}
 
 	public void cargarVideos(File archivo_xml) {
-		Videos vi=new Videos();
-		vi.addVideosListene(getUnicaInstancia());
-		vi.setArchivoVideos(archivo_xml);
+		cargador.setArchivoVideos(archivo_xml);
 	}
 
 	@Override
@@ -68,12 +70,11 @@ public class Controlador implements VideosListener {
 		}
 	}
 	
-	private void registrarVideos(List<umu.tds.componente.Video> videos) {
-		for (umu.tds.componente.Video video : videos) {
+	private void registrarVideos(Videos videos) {
+		for (umu.tds.componente.Video video : videos.getVideo()) {
 			if(!esVideoRegistrado(video.getURL())) {
 				Video vi=new Video(video.getURL(),video.getTitulo(),video.getEtiqueta());
-				adaptadorVideo.registrarVideo(vi);
-				catalogoVideos.addVideo(vi);		
+				registrarVideo(vi);	
 			}
 		}
 	}

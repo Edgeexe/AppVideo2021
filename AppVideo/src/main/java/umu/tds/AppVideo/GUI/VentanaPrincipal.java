@@ -74,16 +74,21 @@ public class VentanaPrincipal extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		getContentPane().setLayout(null);
 		
-		JPanel panel_Explorar = new JPanel();
-		panel_Explorar.setBounds(207, 96, 1073, 624);
-		getContentPane().add(panel_Explorar);
-		panel_Explorar.setLayout(new BorderLayout(0, 0));
+
+			JPanel panel_Explorar = new JPanel();
+			getContentPane().add(panel_Explorar);
+			panel_Explorar.setBounds(207, 96, 1073, 624);
+			panel_Explorar.setLayout(new BorderLayout(0, 0));
+		
+
+		
 		
 		JPanel panel_resultado = new JPanel();
 		panel_resultado.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		panel_resultado.setBackground(Color.LIGHT_GRAY);
 		panel_Explorar.add(panel_resultado, BorderLayout.CENTER);
 		
+
 		tablaVideos = new JTable();
 		tablaVideos.setBounds(1, 26, 450, 0);
 		tablaVideos.setDefaultRenderer(getClass(), new VideoLabelTabla());
