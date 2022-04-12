@@ -1,5 +1,6 @@
 package dominio;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -36,8 +37,10 @@ public class CatalogoVideos {
 	}
 	
 	public List<Video> getVideos() throws DAOException {
-		return new LinkedList<Video>(asistentesPorNombre.values());
+		return new LinkedList<Video>(asistentesPorUrl.values());
 	}
+	
+	
 	
 	
 	public Video getVideo(String Url) {

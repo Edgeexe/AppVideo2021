@@ -12,8 +12,6 @@ import dominio.*;
 import umu.tds.AppVideo.Persistencia.*;
 
 
-
-
 /**
  * Unit test for simple App.
  */
@@ -26,7 +24,7 @@ public class AppTest
 		IAdaptadorListaVideosDAO adaptadorLista=dao.getListaVideosDAO();
 		List<String> etiquetas=new LinkedList<String>();
 		etiquetas.add("Musica");
-		Usuario u1=new Usuario("Javi","Jimenez Hernandez","13/11/2001","javitenista46@gmail.com","prueba1","12345678");
+		Usuario u1=new Usuario("Javi","Jimenez Hernandez","13/11/2001","javitenista46@gmail.com","1","1");
 		Video v1=new Video("https://www.youtube.com/watch?v=l5TMjYj-8MQ","Becky G - Bella Ciao (Official Video)",etiquetas);
 		Video v2=new Video("https://www.youtube.com/watch?v=zEf423kYfqk","Becky G, Natti Natasha - Sin Pijama (Official Video)",etiquetas);
 		ListaVideos lista1=new ListaVideos("lista_prueba",v1,v2);
@@ -37,16 +35,18 @@ public class AppTest
 		rec.add(v1);
 		rec.add(v2);
 		u1.setRecientes(rec);
-		//adaptadorUsuario.create(u1);
+		adaptadorUsuario.create(u1);
 		Usuario usuario=adaptadorUsuario.get(u1.getCodigo());
-		List<Video> videos=adaptadorVideo.recuperarTodosVideo();
-		adaptadorUsuario.delete(u1);
+		adaptadorVideo.registrarVideo(v2);
+		adaptadorVideo.registrarVideo(v1);
+		
+		for(Video video : adaptadorVideo.recuperarTodosVideo()) {
+			System.out.println(video.getTitulo());
+		}
+		/*adaptadorUsuario.delete(u1);
 		adaptadorVideo.borrarVideo(v1);
 		adaptadorVideo.borrarVideo(v2);
-		adaptadorLista.borrarListaVideos(lista1);
-		
-		
-	}
+		adaptadorLista.borrarListaVideos(lista1);*/
 	
-
+	}
 }

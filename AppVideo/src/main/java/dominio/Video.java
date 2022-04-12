@@ -30,7 +30,6 @@ public class Video {
 		return titulo;
 	}
 
-
 	public void setTitulo(String titulo) {
 		this.titulo = titulo;
 	}
@@ -49,12 +48,7 @@ public class Video {
 	public void setUrl(String url) {
 		this.url = url;
 	}
-	public String getTitiulo() {
-		return titulo;
-	}
-	public void setTitiulo(String titiulo) {
-		this.titulo = titiulo;
-	}
+	
 	public int getNumRepro() {
 		return numRepro;
 	}

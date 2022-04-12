@@ -25,18 +25,16 @@ import javax.swing.SwingConstants;
 import java.awt.Insets;
 import java.awt.BorderLayout;
 import javax.swing.JList;
-import javax.swing.JOptionPane;
 import javax.swing.AbstractListModel;
 import javax.swing.Box;
 import javax.swing.border.BevelBorder;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
-import dominio.Video;
 
+import dominio.Video;
 import javax.swing.JTextPane;
 
-import java.awt.FlowLayout;
 import javax.swing.BoxLayout;
 import java.awt.*;
 import javax.swing.JToggleButton;
@@ -58,29 +56,27 @@ public class VentanaPrincipal extends JFrame {
 	private JTextField escribir_busqueda;
 	private JTable tablaVideos;
 	private static VideoWeb vWeb = new VideoWeb();
-	private Controlador appVideo = new Controlador();
+	private static Controlador appVideo = new Controlador();
 	
 	public static void main(String[] args) throws DAOException {
-
         JFrame frame = new VentanaPrincipal();
         frame.setVisible(true);
-}
+        
+	}
 	
 	public VentanaPrincipal() throws DAOException {
+		
 		setBounds(new Rectangle(100, 100, 1280, 720));
 		setLocationRelativeTo(null);
 		setUndecorated(true);
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		getContentPane().setLayout(null);
-		
 
-			JPanel panel_Explorar = new JPanel();
-			getContentPane().add(panel_Explorar);
-			panel_Explorar.setBounds(207, 96, 1073, 624);
-			panel_Explorar.setLayout(new BorderLayout(0, 0));
-		
-
+		JPanel panel_Explorar = new JPanel();
+		getContentPane().add(panel_Explorar);
+		panel_Explorar.setBounds(207, 96, 1073, 624);
+		panel_Explorar.setLayout(new BorderLayout(0, 0));
 		
 		
 		JPanel panel_resultado = new JPanel();
@@ -91,17 +87,19 @@ public class VentanaPrincipal extends JFrame {
 
 		tablaVideos = new JTable();
 		tablaVideos.setBounds(1, 26, 450, 0);
-		tablaVideos.setDefaultRenderer(getClass(), new VideoLabelTabla());
-		LineaVideos linea = new LineaVideos();
-		LinkedList<LineaVideos> listaLineaVideos = new LinkedList<LineaVideos>();
-		ArrayList<Video> videosAux  = (ArrayList<Video>) appVideo.getVideos();
-		
-		listaLineaVideos.add(linea);
+		tablaVideos.setDefaultRenderer(Object.class, new VideoLabelTabla());
+			
+		LineaVideos gVideos = new LineaVideos();
+		LinkedList<LineaVideos> listaCVideos = new LinkedList<LineaVideos>();
+		ArrayList<Video> videosAux  = (ArrayList<Video>) appVideo.getVideos();	
+		listaCVideos.add(gVideos);
 		TablaVideos tm = new TablaVideos();
 		
+		tm.rellenarTabla(videosAux, vWeb);
+		
 		tablaVideos.setModel(tm);
-		tablaVideos.setRowHeight(200); //cambio en la altura para que se vean los titulos
-		tablaVideos.getTableHeader().setUI(null);  //Elimina la cabecera
+		tablaVideos.setRowHeight(175); 
+		tablaVideos.getTableHeader().setUI(null);  
 		TableColumnModel colModel=tablaVideos.getColumnModel();
 		for(int i=0; i<6; i++)
 		{
@@ -111,12 +109,10 @@ public class VentanaPrincipal extends JFrame {
 		panel_resultado.setLayout(null);
 		
 		tablaVideos.setShowGrid(false);
-		
-		panel_resultado.add(tablaVideos);
-		
-		JScrollPane scrollPane = new JScrollPane(tablaVideos);
-		scrollPane.setBounds(0, 0, 979, 590);
-		panel_resultado.add(scrollPane);
+		JScrollPane js=new JScrollPane(tablaVideos);
+		js.setBounds(0, 0, 979, 590);
+		js.setBackground(Color.GRAY);
+		panel_resultado.add(js);
 		
 		JPanel panel_este = new JPanel();
 		panel_este.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
@@ -137,7 +133,6 @@ public class VentanaPrincipal extends JFrame {
 			}
 		});
 		panel_este.add(list);
-		
 		panel_este.add(Box.createRigidArea(new Dimension(90,90)));
 		
 		JTextPane textPane = new JTextPane();
@@ -491,12 +486,33 @@ class LineaVideos {
 	
 	public LineaVideos(Video...videos ) {
 		this();
-		v1 = videos[0];
-		v2 = videos[1];
-		v3 = videos[2];
-		v4 = videos[3];
-		v5 = videos[4];
-		v6 = videos[5];
+		if (videos.length <= 6) {
+			for (int i = 0; i < videos.length; i++) {
+				
+				switch (i) {
+				case 0:
+					this.v1 = videos[0];
+					break;
+				case 1:
+					this.v2 = videos[1];
+					break;
+				case 2:
+					this.v3 = videos[2];
+					break;
+				case 3:
+					this.v4 = videos[3];
+					break;
+				case 4:
+					this.v5 = videos[4];
+					break;
+				case 5:
+					this.v6 = videos[5];
+					break;
+				default:
+					break;
+				}
+			}
+		}
 	}
 	
 	public Video getVideo1() {

@@ -34,16 +34,15 @@ public class Controlador implements VideosListener {
 	}
 	
 	public Controlador() {
-		inicilaizarAdaptadores();
-		inicializarCatalogos();
 		cargador=new CargadorVideos();
 		cargador.addVideosListene(this);
+		inicilaizarAdaptadores();
+		inicializarCatalogos();
 	}
 
 	private void inicializarCatalogos() {
 		catalogoUsuarios=CatalogoUsuarios.getUnicaInstancia();
 		catalogoVideos=CatalogoVideos.getUnicaInstancia();
-		
 	}
 
 	private void inicilaizarAdaptadores() {
@@ -134,7 +133,7 @@ public class Controlador implements VideosListener {
 	}
 	public ArrayList<Video> getVideos() throws DAOException {
 		ArrayList<Video> devolver=new ArrayList<Video>();
-		List<Video> videos=catalogoVideos.getVideos();
+		List<Video> videos= catalogoVideos.getVideos();
 		for (Video video : videos) {
 			devolver.add(video);
 		}

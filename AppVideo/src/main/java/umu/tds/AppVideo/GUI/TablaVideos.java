@@ -9,6 +9,7 @@ import dominio.Video;
 import tds.video.VideoWeb;
 
 public class TablaVideos extends AbstractTableModel{
+	
 	private static final int NUM_COLUMNAS = 6;
 	private static final long serialVersionUID = 1L;
 	private LinkedList<LineaVideos> videos;
@@ -99,7 +100,7 @@ public class TablaVideos extends AbstractTableModel{
 				Video elemento = videos.get(i);
 				switch (i%6) {
 					case 0:
-						aux[0] =elemento;
+						aux[0] = elemento;
 						break;
 					case 1:
 						aux[1] = elemento;
@@ -117,7 +118,7 @@ public class TablaVideos extends AbstractTableModel{
 			}
 		}
 		if ((videos.size() % 6) != 0) {
-			switch (videos.size() %6) {
+			switch (videos.size()%6) {
 			case 1:
 				this.addRow(new LineaVideos(aux[0]));
 				break;
@@ -125,13 +126,13 @@ public class TablaVideos extends AbstractTableModel{
 				this.addRow(new LineaVideos(aux[0], aux[1]));
 				break;
 			case 3:
-				this.addRow(new LineaVideos(aux[0], aux[1], aux[2], aux[3]));
+				this.addRow(new LineaVideos(aux[0], aux[1], aux[2]));
 				break;
 			case 4:
-				this.addRow(new LineaVideos(aux[0], aux[1], aux[2], aux[3], aux[4]));
+				this.addRow(new LineaVideos(aux[0], aux[1], aux[2], aux[3]));
 				break;
 			case 5:
-				this.addRow(new LineaVideos(aux[0], aux[1], aux[2], aux[3], aux[4], aux[5]));
+				this.addRow(new LineaVideos(aux[0], aux[1], aux[2], aux[3], aux[4]));
 				break;
 			default:
 				break;
