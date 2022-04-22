@@ -39,11 +39,11 @@ public class AppTest
 		Usuario usuario=adaptadorUsuario.get(u1.getCodigo());
 		adaptadorVideo.registrarVideo(v2);
 		adaptadorVideo.registrarVideo(v1);
-		
+		/*
 		for(Video video : adaptadorVideo.recuperarTodosVideo()) {
 			System.out.println(video.getTitulo());
 		}
-		/*adaptadorUsuario.delete(u1);
+		adaptadorUsuario.delete(u1);
 		adaptadorVideo.borrarVideo(v1);
 		adaptadorVideo.borrarVideo(v2);
 		adaptadorLista.borrarListaVideos(lista1);*/

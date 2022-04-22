@@ -18,8 +18,7 @@ public class ListaVideos {
 		}
 	}
 	
-	
-	
+
 	public void setCodigo(int codigo) {
 		this.codigo = codigo;
 	}

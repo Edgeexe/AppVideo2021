@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.EventObject;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import dominio.*;
 import dominio.Video;
@@ -123,14 +124,13 @@ public class Controlador implements VideosListener {
 		return true;
 	}*/
 
-	public LinkedList<Video> getVideos(String text) throws DAOException {
-		LinkedList<Video> devolver=new LinkedList<Video>();
-		List<Video> videos=catalogoVideos.getVideos();
-		for (Video video : videos) {
-			if(video.getTitulo().contains(text)) devolver.add(video);
-		}
-		return devolver ;
+	public List<Video> getVideos(String titulo) throws DAOException {
+			List<Video> listaVideos = catalogoVideos.getVideos().stream()
+				.filter(vid -> vid.getTitulo().contains(titulo))
+				.collect(Collectors.toList());
+			return listaVideos;
 	}
+	
 	public ArrayList<Video> getVideos() throws DAOException {
 		ArrayList<Video> devolver=new ArrayList<Video>();
 		List<Video> videos= catalogoVideos.getVideos();

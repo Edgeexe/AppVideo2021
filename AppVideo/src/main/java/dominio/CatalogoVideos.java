@@ -40,9 +40,6 @@ public class CatalogoVideos {
 		return new LinkedList<Video>(asistentesPorUrl.values());
 	}
 	
-	
-	
-	
 	public Video getVideo(String Url) {
 		return asistentesPorUrl.get(Url);
 	}

@@ -20,6 +20,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.EventObject;
 import java.util.LinkedList;
+import java.util.List;
 import java.awt.Font;
 import javax.swing.SwingConstants;
 import java.awt.Insets;
@@ -33,6 +34,7 @@ import javax.swing.table.TableColumnModel;
 
 
 import dominio.Video;
+
 import javax.swing.JTextPane;
 
 import javax.swing.BoxLayout;
@@ -156,16 +158,35 @@ public class VentanaPrincipal extends JFrame {
 		panel_busqueda.add(boton_buscar);
 		boton_buscar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				LinkedList<Video> videos=new LinkedList<Video>();
-				try {
-					videos=Controlador.getUnicaInstancia().getVideos(escribir_busqueda.getText());
-				} catch (DAOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+				String texto = escribir_busqueda.getText();
+				if (!texto.equals("")) {
+					List<Video> videoBuscado;
+					try {
+						videoBuscado = appVideo.getVideos(texto);
+						int filas = tablaVideos.getRowCount();
+						for (int i = filas-1; i >= 0; i--)
+							tm.removeRow(i);
+						if (videoBuscado != null)
+							tm.rellenarTabla(videoBuscado, vWeb);
+					} catch (DAOException e1) {
+						e1.printStackTrace();
+					}
+					
 				}
-				if(videos.size()!=0) {
-					tm.rellenarTabla(videos,getVideoWeb());
+				else {
+					int filas = tablaVideos.getRowCount();
+					for (int i = filas-1; i >= 0; i--)
+						tm.removeRow(i);
+					List<Video> todosVideos;
+					try {
+						todosVideos = appVideo.getVideos();
+						tm.rellenarTabla(todosVideos, vWeb);
+					} catch (DAOException e1) {
+						e1.printStackTrace();
+					}		
 				}
+				tm.fireTableDataChanged();
+				validate();	
 			}
 		});
 		
@@ -173,6 +194,16 @@ public class VentanaPrincipal extends JFrame {
 		
 		JButton btn_Reset = new JButton("Reset");
 		panel_busqueda.add(btn_Reset);
+		
+		btn_Reset.addActionListener(ev -> {
+			int filas = tablaVideos.getRowCount();
+			for (int i = filas-1; i >= 0; i--)
+				tm.removeRow(i);
+			tm.fireTableDataChanged();
+			panel_busqueda.repaint();
+			panel_busqueda.revalidate();
+			validate();
+		});
 		
 		JPanel panel_cabecera = new JPanel();
 		panel_cabecera.setOpaque(false);
