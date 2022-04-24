@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import dominio.*;
-import dominio.Video;
 import umu.tds.AppVideo.Persistencia.*;
 import umu.tds.componente.CargadorVideos;
 import umu.tds.componente.Videos;
@@ -138,6 +137,22 @@ public class Controlador implements VideosListener {
 			devolver.add(video);
 		}
 		return devolver ;
+	}
+
+	public ListaVideos buscarPlaylist(String playlist) {
+		return getUnicaInstancia().getUsuarioActual().tienePlaylist(playlist);
+	}
+	
+	public void anadirPlaylist(ListaVideos playlist) {
+		getUnicaInstancia().getUsuarioActual().addListaVideos(playlist);
+	}
+
+	public void eliminarPlaylist(ListaVideos playlist) {
+		getUnicaInstancia().getUsuarioActual().borrarListaVideos(playlist);
+	}
+	
+	public void actualizarPlaylist(ListaVideos antigua, ListaVideos nueva) {
+		getUnicaInstancia().getUsuarioActual().actualizarListaVideos(antigua,nueva);
 	}
 	
 }

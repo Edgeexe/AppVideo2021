@@ -26,13 +26,14 @@ import javax.swing.SwingConstants;
 import java.awt.Insets;
 import java.awt.BorderLayout;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.AbstractListModel;
 import javax.swing.Box;
 import javax.swing.border.BevelBorder;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
-
+import dominio.ListaVideos;
 import dominio.Video;
 
 import javax.swing.JTextPane;
@@ -49,6 +50,8 @@ import umu.tds.Controlador.Controlador;
 
 import javax.swing.JTable;
 import javax.swing.JScrollPane;
+import javax.swing.JScrollBar;
+import javax.swing.table.DefaultTableModel;
 
 public class VentanaPrincipal extends JFrame {
 
@@ -56,9 +59,14 @@ public class VentanaPrincipal extends JFrame {
 	private int posX=0;
 	private int	posY=0;
 	private JTextField escribir_busqueda;
-	private JTable tablaVideos;
+	private JTable tablaVideos_explorar;
+	private JTable tablaVideos_crear_lista;
+	private JTable tablaVideos_vertical1;
 	private static VideoWeb vWeb = new VideoWeb();
-	private static Controlador appVideo = new Controlador();
+	private static Controlador appVideo = Controlador.getUnicaInstancia();
+	private JTextField lista;
+	private JTextField nom_video;
+	private ListaVideos playlist;
 	
 	public static void main(String[] args) throws DAOException {
         JFrame frame = new VentanaPrincipal();
@@ -74,11 +82,18 @@ public class VentanaPrincipal extends JFrame {
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		getContentPane().setLayout(null);
+		
+		JPanel panel_layout = new JPanel();
+		panel_layout.setBounds(207, 96, 1073, 624);
+		getContentPane().add(panel_layout);
+		panel_layout.setLayout(new CardLayout(0, 0));
+		
+		
 
 		JPanel panel_Explorar = new JPanel();
-		getContentPane().add(panel_Explorar);
 		panel_Explorar.setBounds(207, 96, 1073, 624);
 		panel_Explorar.setLayout(new BorderLayout(0, 0));
+		panel_layout.add(panel_Explorar,"explorar");
 		
 		
 		JPanel panel_resultado = new JPanel();
@@ -87,22 +102,22 @@ public class VentanaPrincipal extends JFrame {
 		panel_Explorar.add(panel_resultado, BorderLayout.CENTER);
 		
 
-		tablaVideos = new JTable();
-		tablaVideos.setBounds(1, 26, 450, 0);
-		tablaVideos.setDefaultRenderer(Object.class, new VideoLabelTabla());
+		tablaVideos_explorar = new JTable();
+		tablaVideos_explorar.setBounds(1, 26, 450, 0);
+		tablaVideos_explorar.setDefaultRenderer(Object.class, new VideoLabelTabla());
 			
 		LineaVideos gVideos = new LineaVideos();
 		LinkedList<LineaVideos> listaCVideos = new LinkedList<LineaVideos>();
 		ArrayList<Video> videosAux  = (ArrayList<Video>) appVideo.getVideos();	
 		listaCVideos.add(gVideos);
-		TablaVideos tm = new TablaVideos();
+		TablaVideos tm = new TablaVideos(6);
 		
-		tm.rellenarTabla(videosAux, vWeb);
+		//tm.rellenarTabla(videosAux, vWeb);
 		
-		tablaVideos.setModel(tm);
-		tablaVideos.setRowHeight(175); 
-		tablaVideos.getTableHeader().setUI(null);  
-		TableColumnModel colModel=tablaVideos.getColumnModel();
+		tablaVideos_explorar.setModel(tm);
+		tablaVideos_explorar.setRowHeight(175); 
+		tablaVideos_explorar.getTableHeader().setUI(null);  
+		TableColumnModel colModel=tablaVideos_explorar.getColumnModel();
 		for(int i=0; i<6; i++)
 		{
 			TableColumn col=colModel.getColumn(i);
@@ -110,8 +125,8 @@ public class VentanaPrincipal extends JFrame {
 		}
 		panel_resultado.setLayout(null);
 		
-		tablaVideos.setShowGrid(false);
-		JScrollPane js=new JScrollPane(tablaVideos);
+		tablaVideos_explorar.setShowGrid(false);
+		JScrollPane js=new JScrollPane(tablaVideos_explorar);
 		js.setBounds(0, 0, 979, 590);
 		js.setBackground(Color.GRAY);
 		panel_resultado.add(js);
@@ -163,7 +178,7 @@ public class VentanaPrincipal extends JFrame {
 					List<Video> videoBuscado;
 					try {
 						videoBuscado = appVideo.getVideos(texto);
-						int filas = tablaVideos.getRowCount();
+						int filas = tablaVideos_explorar.getRowCount();
 						for (int i = filas-1; i >= 0; i--)
 							tm.removeRow(i);
 						if (videoBuscado != null)
@@ -174,7 +189,7 @@ public class VentanaPrincipal extends JFrame {
 					
 				}
 				else {
-					int filas = tablaVideos.getRowCount();
+					int filas = tablaVideos_explorar.getRowCount();
 					for (int i = filas-1; i >= 0; i--)
 						tm.removeRow(i);
 					List<Video> todosVideos;
@@ -196,7 +211,7 @@ public class VentanaPrincipal extends JFrame {
 		panel_busqueda.add(btn_Reset);
 		
 		btn_Reset.addActionListener(ev -> {
-			int filas = tablaVideos.getRowCount();
+			int filas = tablaVideos_explorar.getRowCount();
 			for (int i = filas-1; i >= 0; i--)
 				tm.removeRow(i);
 			tm.fireTableDataChanged();
@@ -205,6 +220,227 @@ public class VentanaPrincipal extends JFrame {
 			validate();
 		});
 		
+		
+		JPanel panel_misListas = new JPanel();
+		panel_layout.add(panel_misListas, "mis_listas");
+		
+		JPanel panel_nuevaLista = new JPanel();
+		panel_layout.add(panel_nuevaLista, "crear_listas");
+		panel_nuevaLista.setLayout(null);
+		
+		JLabel nombre_lista = new JLabel("Nombre Lista");
+		nombre_lista.setBounds(66, 11, 86, 14);
+		panel_nuevaLista.add(nombre_lista);
+		
+		lista = new JTextField();
+		lista.setBounds(10, 36, 179, 20);
+		panel_nuevaLista.add(lista);
+		lista.setColumns(10);
+		
+		tablaVideos_crear_lista = new JTable();
+		tablaVideos_crear_lista.setBounds(1, 26, 450, 0);
+		tablaVideos_crear_lista.setDefaultRenderer(Object.class, new VideoLabelTabla());
+		
+		TablaVideos tm2 = new TablaVideos(6);
+		
+		//tm2.rellenarTabla(videosAux, vWeb);
+		
+		tablaVideos_crear_lista.setModel(tm2);
+		tablaVideos_crear_lista.setRowHeight(175); 
+		tablaVideos_crear_lista.getTableHeader().setUI(null);  
+		colModel=tablaVideos_crear_lista.getColumnModel();
+		for(int i=0; i<6; i++)
+		{
+			TableColumn col=colModel.getColumn(i);
+			col.setPreferredWidth(145);
+		}
+		panel_resultado.setLayout(null);
+		
+		tablaVideos_crear_lista.setShowGrid(false);
+		
+		JScrollPane scrollPane_1 = new JScrollPane(tablaVideos_crear_lista);
+		scrollPane_1.setBounds(272, 67, 770, 437);
+		panel_nuevaLista.add(scrollPane_1);
+		
+		tablaVideos_vertical1 = new JTable();
+		tablaVideos_vertical1.setBounds(1, 26, 450, 0);
+		tablaVideos_vertical1.setDefaultRenderer(Object.class, new VideoLabelTabla());
+		
+		TablaVideos tm1 = new TablaVideos(1);
+		
+		//tm1.rellenarTabla(videosAux, vWeb);
+		
+		tablaVideos_vertical1.setModel(tm1);
+		tablaVideos_vertical1.setRowHeight(175); 
+		tablaVideos_vertical1.getTableHeader().setUI(null);  
+		colModel=tablaVideos_vertical1.getColumnModel();
+		for(int i=0; i<1; i++)
+		{
+			TableColumn col=colModel.getColumn(i);
+			col.setPreferredWidth(145);
+		}
+		panel_resultado.setLayout(null);
+		
+		tablaVideos_vertical1.setShowGrid(false);
+		
+		JScrollPane scrollPane = new JScrollPane(tablaVideos_vertical1);
+		scrollPane.setBounds(21, 120, 170, 384);
+		panel_nuevaLista.add(scrollPane);
+		
+		JButton buscar_lista = new JButton("Buscar");
+		buscar_lista.setBounds(10, 67, 89, 23);
+		panel_nuevaLista.add(buscar_lista);
+		buscar_lista.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				ListaVideos pl=appVideo.buscarPlaylist(lista.getText());
+				if(pl!=null) {
+					int decision=JOptionPane.showConfirmDialog(tablaVideos_crear_lista,"¿Le gustría editar la playlist existente?","La Playlist existe",JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+					if(decision == JOptionPane.YES_OPTION) {
+						playlist=pl;
+						for(int i=0;i<tablaVideos_vertical1.getRowCount();i++) tm1.removeRow(i);
+						tm1.rellenarTabla(playlist.getListaVideos(), vWeb);
+						tm1.fireTableDataChanged();
+						validate();	
+					}
+				}
+				else {
+					int decision=JOptionPane.showConfirmDialog(tablaVideos_crear_lista,"¿Le gustría crear la playlist?","La Playlist no existe",JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+					if(decision == JOptionPane.YES_OPTION)
+						playlist=new ListaVideos(lista.getText());
+				}
+			}
+			
+		});
+		
+		JButton eliminar = new JButton("Eliminar");
+		eliminar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int output = JOptionPane.showConfirmDialog(tablaVideos_vertical1, "Borrar Playlist","¿Quieres borrar la playlist?", JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE);
+				if (output == JOptionPane.YES_OPTION) {
+					appVideo.eliminarPlaylist(playlist);
+				}
+			}
+		});
+		eliminar.setBounds(100, 67, 89, 23);
+		panel_nuevaLista.add(eliminar);
+				
+		JButton anadir_boton = new JButton("Añadir");
+		anadir_boton.setBounds(10, 515, 89, 23);
+		panel_nuevaLista.add(anadir_boton);
+		
+		anadir_boton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Video video=(Video) tablaVideos_crear_lista.getValueAt(tablaVideos_crear_lista.getSelectedRow(),tablaVideos_crear_lista.getSelectedColumn());
+				playlist.addVideo(video);
+				for(int i=0;i<tablaVideos_vertical1.getRowCount();i++) tm1.removeRow(i);
+				tm1.rellenarTabla(playlist.getListaVideos(), vWeb);
+				tm1.fireTableDataChanged();
+				validate();	
+			}
+		});
+		
+		JButton quitar_boton = new JButton("Quitar");
+		quitar_boton.setBounds(109, 515, 89, 23);
+		panel_nuevaLista.add(quitar_boton);
+		
+		quitar_boton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Video video=(Video) tablaVideos_vertical1.getValueAt(tablaVideos_vertical1.getSelectedRow(),tablaVideos_vertical1.getSelectedColumn());
+				playlist.removeVideo(video);
+				for(int i=0;i<tablaVideos_vertical1.getRowCount();i++) tm1.removeRow(i);
+				tm1.rellenarTabla(playlist.getListaVideos(), vWeb);
+				tm1.fireTableDataChanged();
+				validate();					
+			}		
+		});
+		
+		JButton boton_aceptar = new JButton("Aceptar");
+		boton_aceptar.setBounds(63, 549, 89, 23);
+		panel_nuevaLista.add(boton_aceptar);
+		
+		boton_aceptar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {			
+				ListaVideos pl_antigua=appVideo.buscarPlaylist(lista.getText());
+				if(pl_antigua==null) {
+					appVideo.anadirPlaylist(playlist);
+				}
+				else {
+					appVideo.actualizarPlaylist(pl_antigua,playlist);
+				}
+				int filas = tablaVideos_vertical1.getRowCount();
+				for (int i = filas-1; i >= 0; i--)
+					tm1.removeRow(i);
+				tm1.fireTableDataChanged();
+				panel_nuevaLista.repaint();
+				panel_nuevaLista.revalidate();
+				validate();
+			}		
+		});
+		
+		
+		
+		
+		JLabel lblNewLabel = new JLabel("Título Vídeo");
+		lblNewLabel.setBounds(476, 11, 120, 14);
+		panel_nuevaLista.add(lblNewLabel);
+		
+		nom_video = new JTextField();
+		nom_video.setBounds(272, 36, 535, 20);
+		panel_nuevaLista.add(nom_video);
+		nom_video.setColumns(10);
+		
+		JButton buscar_2 = new JButton("Buscar");
+		buscar_2.setBounds(817, 35, 89, 23);
+		panel_nuevaLista.add(buscar_2);
+		buscar_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String texto = nom_video.getText();
+				if (!texto.equals("")) {
+					List<Video> videoBuscado;
+					try {
+						videoBuscado = appVideo.getVideos(texto);
+						int filas = tablaVideos_crear_lista.getRowCount();
+						for (int i = filas-1; i >= 0; i--)
+							tm2.removeRow(i);
+						if (videoBuscado != null)
+							tm2.rellenarTabla(videoBuscado, vWeb);
+					} catch (DAOException e1) {
+						e1.printStackTrace();
+					}
+					
+				}
+				else {
+					int filas = tablaVideos_crear_lista.getRowCount();
+					for (int i = filas-1; i >= 0; i--)
+						tm2.removeRow(i);
+					List<Video> todosVideos;
+					try {
+						todosVideos = appVideo.getVideos();
+						tm2.rellenarTabla(todosVideos, vWeb);
+					} catch (DAOException e1) {
+						e1.printStackTrace();
+					}		
+				}
+				tm2.fireTableDataChanged();
+				validate();	
+			}
+		});
+		
+		JButton reset2 = new JButton("Reset");
+		reset2.setBounds(916, 35, 89, 23);
+		panel_nuevaLista.add(reset2);
+		reset2.addActionListener(ev -> {
+			int filas = tablaVideos_crear_lista.getRowCount();
+			for (int i = filas-1; i >= 0; i--)
+				tm2.removeRow(i);
+			tm2.fireTableDataChanged();
+			panel_nuevaLista.repaint();
+			panel_nuevaLista.revalidate();
+			validate();
+		});
+			
 		JPanel panel_cabecera = new JPanel();
 		panel_cabecera.setOpaque(false);
 		panel_cabecera.setBorder(null);
@@ -280,7 +516,8 @@ public class VentanaPrincipal extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if(e.getButton()==MouseEvent.BUTTON1) {
-					panel_Explorar.setVisible(true);
+					CardLayout cl=(CardLayout)(panel_layout.getLayout());
+					cl.show(panel_layout, "explorar");
 				}
 			}
 		});
@@ -310,7 +547,8 @@ public class VentanaPrincipal extends JFrame {
 		    
 			public void mouseClicked(MouseEvent e) {
 				if(e.getButton()==MouseEvent.BUTTON1) {
-					panel_Explorar.setVisible(false);
+					CardLayout cl=(CardLayout)(panel_layout.getLayout());
+					cl.show(panel_layout, "mis_listas");
 				}
 			}
 		});
@@ -337,6 +575,13 @@ public class VentanaPrincipal extends JFrame {
 		    public void mouseExited(MouseEvent evt) {
 		    	boton_Recientes.setContentAreaFilled(false);		    
 		    }
+		    
+			public void mouseClicked(MouseEvent e) {
+				if(e.getButton()==MouseEvent.BUTTON1) {
+					CardLayout cl=(CardLayout)(panel_layout.getLayout());
+					cl.show(panel_layout, "recientes");
+				}
+			}
 		});
 		
 		JButton boton_Nueva_Lista = new JButton("        Nueva Lista");
@@ -361,6 +606,13 @@ public class VentanaPrincipal extends JFrame {
 		    public void mouseExited(MouseEvent evt) {
 		    	boton_Nueva_Lista.setContentAreaFilled(false);		    
 		    }
+		    
+			public void mouseClicked(MouseEvent e) {
+				if(e.getButton()==MouseEvent.BUTTON1) {
+					CardLayout cl=(CardLayout)(panel_layout.getLayout());
+					cl.show(panel_layout, "crear_listas");
+				}
+			}
 		});
 		
 		JButton boton_Logout = new JButton("CERRAR SESION");
@@ -465,6 +717,8 @@ public class VentanaPrincipal extends JFrame {
 		fondo.setIcon(new ImageIcon(Login.class.getResource("/umu/tds/AppVideo/Resources/AppBG.png")));
 		fondo.setBounds(0, 0, 1280, 720);
 		getContentPane().add(fondo);
+		
+
 		
 		//
 		//Para arrastrar la ventana

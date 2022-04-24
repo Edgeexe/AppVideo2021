@@ -49,6 +49,10 @@ public class ListaVideos {
 		this.videos.add(video);
 	}
 	
+	public void removeVideo(Video video) {
+		this.videos.remove(video);
+	}
+	
 	public String videosToString() {		// método para la construcción de propiedades del método DAO
 		String videos = "";
 		for(Video video : this.videos) {

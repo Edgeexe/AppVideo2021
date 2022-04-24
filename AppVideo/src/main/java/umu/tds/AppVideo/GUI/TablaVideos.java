@@ -10,12 +10,13 @@ import tds.video.VideoWeb;
 
 public class TablaVideos extends AbstractTableModel{
 	
-	private static final int NUM_COLUMNAS = 6;
+	private  int num_columnas;
 	private static final long serialVersionUID = 1L;
 	private LinkedList<LineaVideos> videos;
 	private String[] columnNames = {"Video 1","Video 2", "Video 3", "Video 4", "Video 5", "Video 6"};
 
-	public TablaVideos(){
+	public TablaVideos(int num_columnas){
+		this.num_columnas=num_columnas;
 		this.videos = new LinkedList<LineaVideos>();
 	}
 	
@@ -28,7 +29,7 @@ public class TablaVideos extends AbstractTableModel{
 	}
 	
 	public int getColumnCount() { 
-		return NUM_COLUMNAS; 
+		return num_columnas; 
 	}
 	
 	public Video getValueAt(int row, int col) {

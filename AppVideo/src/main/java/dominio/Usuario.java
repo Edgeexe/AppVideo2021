@@ -181,4 +181,24 @@ public class Usuario {
 		return recientes.trim();
 	}
 
+
+	public ListaVideos tienePlaylist(String playlist) {
+		for (ListaVideos listaVideo : listasVideos) {
+			if(listaVideo.getNombre().equals(playlist))
+				return listaVideo;
+		}
+		return null;
+	}
+
+
+	public void borrarListaVideos(ListaVideos playlist) {
+		this.listasVideos.remove(playlist);	
+	}
+
+
+	public void actualizarListaVideos(ListaVideos antigua, ListaVideos nueva) {
+		this.listasVideos.remove(antigua);
+		this.listasVideos.add(nueva);
+	}
+
 }
