@@ -11,13 +11,13 @@ public class Usuario {
 	private String usuario;
 	private String email;
 	private String contraseña;
-	private String fecha;
+	private Date fecha;
 	private boolean premium;
 	private List<ListaVideos> listasVideos;
 	private List<Video> recientes;
 	private Filtro filtro;
 	
-	public Usuario(String nombre, String apellidos, String fecha, String email, String usuario,
+	public Usuario(String nombre, String apellidos, Date fecha, String email, String usuario,
 			String contrasena) {
 		this.codigo = 0;
 		this.nombre = nombre;
@@ -85,7 +85,7 @@ public class Usuario {
 	}
 
 
-	public String getFecha() {
+	public Date getFecha() {
 		return fecha;
 	}
 
@@ -148,7 +148,7 @@ public class Usuario {
 
 
 
-	public void setFecha(String fecha) {
+	public void setFecha(Date fecha) {
 		this.fecha = fecha;
 	}
 
@@ -199,6 +199,15 @@ public class Usuario {
 	public void actualizarListaVideos(ListaVideos antigua, ListaVideos nueva) {
 		this.listasVideos.remove(antigua);
 		this.listasVideos.add(nueva);
+	}
+
+
+	public ListaVideos getListaVideos(String nombre_playlist) {
+		for (ListaVideos listaVideos : listasVideos) {
+			if(listaVideos.getNombre().equals(nombre_playlist))
+				return listaVideos;
+		}
+		return null;
 	}
 
 }

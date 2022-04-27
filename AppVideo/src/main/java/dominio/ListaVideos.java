@@ -46,8 +46,12 @@ public class ListaVideos {
 
 
 	public void addVideo(Video video) {
-		this.videos.add(video);
-	}
+			for (Video vi : videos) {
+				if(vi.getUrl().equals(video.getUrl()))
+					return;
+			}
+			videos.add(video);
+		}
 	
 	public void removeVideo(Video video) {
 		this.videos.remove(video);

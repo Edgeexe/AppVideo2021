@@ -4,6 +4,7 @@ import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.EventObject;
 import java.util.LinkedList;
 import java.util.List;
@@ -41,8 +42,8 @@ public class Controlador implements VideosListener {
 	}
 
 	private void inicializarCatalogos() {
-		catalogoUsuarios=CatalogoUsuarios.getUnicaInstancia();
 		catalogoVideos=CatalogoVideos.getUnicaInstancia();
+		catalogoUsuarios=CatalogoUsuarios.getUnicaInstancia();
 	}
 
 	private void inicilaizarAdaptadores() {
@@ -78,7 +79,7 @@ public class Controlador implements VideosListener {
 		}
 	}
 
-	private void registrarVideo(Video video) {
+	public void registrarVideo(Video video) {
 		if(!esVideoRegistrado(video.getUrl())) {
 			adaptadorVideo.registrarVideo(video);
 			catalogoVideos.addVideo(video);			
@@ -106,7 +107,7 @@ public class Controlador implements VideosListener {
 		return false;
 	}
 
-	public boolean registrarUsuario(String nombre, String apellidos, String email, String login, String password,String fechaNacimiento) {
+	public boolean registrarUsuario(String nombre, String apellidos, String email, String login, String password,Date fechaNacimiento) {
 		if (esUsuarioRegistrado(login))
 			return false;
 		Usuario usuario = new Usuario(nombre, apellidos,fechaNacimiento,email, login, password);
@@ -145,14 +146,29 @@ public class Controlador implements VideosListener {
 	
 	public void anadirPlaylist(ListaVideos playlist) {
 		getUnicaInstancia().getUsuarioActual().addListaVideos(playlist);
+		adaptadorUsuario.registrarPlaylist(playlist);
+		adaptadorUsuario.update(getUnicaInstancia().getUsuarioActual());
+		
 	}
 
 	public void eliminarPlaylist(ListaVideos playlist) {
 		getUnicaInstancia().getUsuarioActual().borrarListaVideos(playlist);
+		adaptadorUsuario.borrarPlaylist(playlist);
+		adaptadorUsuario.update(getUnicaInstancia().getUsuarioActual());
 	}
 	
 	public void actualizarPlaylist(ListaVideos antigua, ListaVideos nueva) {
 		getUnicaInstancia().getUsuarioActual().actualizarListaVideos(antigua,nueva);
+		adaptadorUsuario.actualizarPlaylist(nueva);
+		adaptadorUsuario.update(getUnicaInstancia().getUsuarioActual());
+	}
+
+	public List<ListaVideos> getListasVideosUsuario() {
+		return getUnicaInstancia().getUsuarioActual().getListasVideos();
+	}
+
+	public ListaVideos getListaVideo(String nombre_playlist) {
+		return getUnicaInstancia().getUsuarioActual().getListaVideos(nombre_playlist);
 	}
 	
 }

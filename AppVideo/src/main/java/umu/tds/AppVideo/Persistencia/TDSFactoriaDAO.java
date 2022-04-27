@@ -6,7 +6,7 @@ public class TDSFactoriaDAO extends FactoriaDAO {
 	
 	@Override
 	public IAdaptadorUsuarioDAO getUsuarioDAO() {
-		return new AdaptadorUsuarioTDS();
+		return AdaptadorUsuarioTDS.getUnicaInstancia();
 	}
 
 	@Override

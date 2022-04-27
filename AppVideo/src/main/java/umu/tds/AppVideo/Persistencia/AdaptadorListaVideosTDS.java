@@ -60,15 +60,18 @@ public class AdaptadorListaVideosTDS implements IAdaptadorListaVideosDAO{
 
 	public ListaVideos recuperarListaVideos(int codigo) {
 		Entidad eLv = servPersistencia.recuperarEntidad(codigo);
-
 		String nombre = String.valueOf(servPersistencia.recuperarPropiedadEntidad(eLv, "nombre"));
 		String v=  servPersistencia.recuperarPropiedadEntidad(eLv,"videos");
 		String[] videos=v.split(" ");
 		ListaVideos l=new ListaVideos(nombre);
+		if (v.equals("")) {
+			l.setCodigo(eLv.getId());
+			return l;
+		}
 		for (String video : videos) {
 			l.addVideo(AdaptadorVideoTDS.getInstance().recuperarVideo(Integer.parseInt(video)));
 		}
-
+		l.setCodigo(eLv.getId());
 		return l;
 	}
 

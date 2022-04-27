@@ -66,7 +66,7 @@ public class TablaVideos extends AbstractTableModel{
 	public void rellenarTabla(List<Video> videos, VideoWeb vWeb) {
 		Video aux[] = new Video[6];
 		boolean escribir = false;
-		if (videos.size() > 6) {
+		if (videos.size() >= 6) {
 			for(int i = 0; i < videos.size(); i++) {
 				Video elemento = videos.get(i);
 				switch (i%6) {
@@ -81,8 +81,10 @@ public class TablaVideos extends AbstractTableModel{
 						break;
 					case 3:
 						aux[3] = elemento;
+						break;
 					case 4:
 						aux[4] = elemento;
+						break;
 					case 5:
 						aux[5] = elemento;
 						escribir = true;
@@ -108,8 +110,10 @@ public class TablaVideos extends AbstractTableModel{
 						break;
 					case 2:
 						aux[2] = elemento;
+						break;
 					case 3:
 						aux[3] = elemento;
+						break;
 					case 4:
 						aux[4] = elemento;
 						break;

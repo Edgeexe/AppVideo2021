@@ -37,6 +37,7 @@ import java.awt.Container;
 import java.awt.Dimension;
 
 import javax.swing.JSeparator;
+import com.toedter.calendar.JDateChooser;
 
 public class SignUp extends JFrame {
 
@@ -50,7 +51,6 @@ public class SignUp extends JFrame {
 	private JLabel lblPasswordChk;
 	private JTextField txtNombre;
 	private JTextField txtApellidos;
-	private JTextField txtFechaNacimiento;
 	private JTextField txtEmail;
 	private JTextField txtUsuario;
 	private JPasswordField txtPassword;
@@ -70,6 +70,7 @@ public class SignUp extends JFrame {
 	private JPanel panelCamposEmail;
 	private JPanel panelCamposUsuario;
 	private JPanel panelCamposFechaNacimiento;
+	private JDateChooser dateChooser;
 
 	public SignUp() {
 		initialize();
@@ -240,9 +241,10 @@ public class SignUp extends JFrame {
 		lblFechaNacimiento = new JLabel("Fecha de Nacimiento: ", JLabel.RIGHT);
 		panelCamposFechaNacimiento.add(lblFechaNacimiento);
 		fixedSize(lblFechaNacimiento, 130, 20);
-		txtFechaNacimiento = new JTextField();
-		panelCamposFechaNacimiento.add(txtFechaNacimiento);
-		fixedSize(txtFechaNacimiento, 215, 20);
+		
+		dateChooser = new JDateChooser();
+		dateChooser.setDateFormatString("dd/MM/yyyy");
+		panelCamposFechaNacimiento.add(dateChooser);
 		lblFechaNacimientoError = new JLabel("Introduce la fecha de nacimiento", SwingConstants.CENTER);
 		fixedSize(lblFechaNacimientoError, 150, 15);
 		lblFechaNacimientoError.setForeground(Color.RED);
@@ -277,7 +279,7 @@ public class SignUp extends JFrame {
 					registrado = Controlador.getUnicaInstancia().registrarUsuario(txtNombre.getText(),
 							txtApellidos.getText(), txtEmail.getText(), txtUsuario.getText(),
 							new String(txtPassword.getPassword()), 
-							txtFechaNacimiento.getText());
+							dateChooser.getDate());
 					if (registrado) {
 						JOptionPane.showMessageDialog(frmRegistro, "Usuario registrado correctamente.", "Registro",
 								JOptionPane.INFORMATION_MESSAGE);
@@ -370,10 +372,10 @@ public class SignUp extends JFrame {
 			txtUsuario.setBorder(BorderFactory.createLineBorder(Color.RED));
 			salida = false;
 		}
-		if (txtFechaNacimiento.getText().isEmpty()) {
+		if (dateChooser.getDate()==null) {
 			lblFechaNacimientoError.setVisible(true);
 			lblFechaNacimiento.setForeground(Color.RED);
-			txtFechaNacimiento.setBorder(BorderFactory.createLineBorder(Color.RED));
+			dateChooser.setBorder(BorderFactory.createLineBorder(Color.RED));
 			salida = false;
 		}
 
@@ -405,7 +407,6 @@ public class SignUp extends JFrame {
 		txtPassword.setBorder(border);
 		txtPasswordChk.setBorder(border);
 		txtUsuario.setBorder(border);
-		txtFechaNacimiento.setBorder(border);
 		
 		lblNombre.setForeground(Color.BLACK);
 		lblApellidos.setForeground(Color.BLACK);

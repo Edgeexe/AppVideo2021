@@ -21,7 +21,20 @@ import tds.driver.ServicioPersistencia;
 
 public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO{
 	private static ServicioPersistencia servPersistencia=FactoriaServicioPersistencia.getInstance().getServicioPersistencia();
-	private SimpleDateFormat dateFormat;
+	private SimpleDateFormat dateFormat; 
+
+	private static AdaptadorUsuarioTDS unicaInstancia;
+
+	public static AdaptadorUsuarioTDS getUnicaInstancia() { // patron singleton
+		if (unicaInstancia == null) return new AdaptadorUsuarioTDS();
+		else
+			return unicaInstancia;
+	}
+
+	private AdaptadorUsuarioTDS() {
+		servPersistencia = FactoriaServicioPersistencia.getInstance().getServicioPersistencia();
+		dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+	}
 	
 	private static final String USUARIO = "Usuario";
 
@@ -35,7 +48,6 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO{
 	private static final String MIS_LISTAS = "mis_listas";
 
 	private Usuario entidadToUsuario(Entidad eUsuario) {
-
 		String nombre = servPersistencia.recuperarPropiedadEntidad(eUsuario, NOMBRE);
 		String apellidos = servPersistencia.recuperarPropiedadEntidad(eUsuario, APELLIDOS);
 		String email = servPersistencia.recuperarPropiedadEntidad(eUsuario, EMAIL);
@@ -47,7 +59,15 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO{
 		recientes=obtenerRecientesDesdeCodigos(servPersistencia.recuperarPropiedadEntidad(eUsuario,RECIENTES));
 		listas=obtenerListasDesdeCodigos(servPersistencia.recuperarPropiedadEntidad(eUsuario,MIS_LISTAS));
 
-		Usuario usuario = new Usuario(nombre, apellidos, fechaNacimiento,email, login, password);
+		Date fecha=new Date();
+		try {
+			fecha = dateFormat.parse(fechaNacimiento);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		Usuario usuario = new Usuario(nombre, apellidos,fecha,email, login, password);
 		usuario.setCodigo(eUsuario.getId());
 		usuario.setRecientes(recientes);
 		usuario.setListasVideos(listas);
@@ -76,7 +96,7 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO{
 		eUser.setPropiedades(new ArrayList<Propiedad>(Arrays.asList(new Propiedad(NOMBRE, usuario.getNombre()),
 				new Propiedad(APELLIDOS, usuario.getApellidos()), new Propiedad(EMAIL, usuario.getEmail()),
 				new Propiedad(LOGIN, usuario.getUsuario()), new Propiedad(PASSWORD, usuario.getContrasena()),
-				new Propiedad(FECHA_NACIMIENTO, usuario.getFecha()),new Propiedad(RECIENTES,obtenerCodigosRecientes(usuario.getRecientes())),
+				new Propiedad(FECHA_NACIMIENTO, dateFormat.format(usuario.getFecha())),new Propiedad(RECIENTES,obtenerCodigosRecientes(usuario.getRecientes())),
 				new Propiedad(MIS_LISTAS,obtenerCodigosListas(usuario.getListasVideos())))));
 		eUser = servPersistencia.registrarEntidad(eUser);
 		usuario.setCodigo(eUser.getId());
@@ -139,18 +159,31 @@ private List<ListaVideos> obtenerListasDesdeCodigos(String lineas) {
 		for (Propiedad prop : eUsuario.getPropiedades()) {
 			if (prop.getNombre().equals(PASSWORD)) {
 				prop.setValor(usuario.getContrasena());
+				servPersistencia.modificarPropiedad(prop);
 			} else if (prop.getNombre().equals(EMAIL)) {
 				prop.setValor(usuario.getEmail());
+				servPersistencia.modificarPropiedad(prop);
 			} else if (prop.getNombre().equals(NOMBRE)) {
 				prop.setValor(usuario.getNombre());
+				servPersistencia.modificarPropiedad(prop);
 			} else if (prop.getNombre().equals(APELLIDOS)) {
 				prop.setValor(usuario.getApellidos());
+				servPersistencia.modificarPropiedad(prop);
 			} else if (prop.getNombre().equals(LOGIN)) {
 				prop.setValor(usuario.getUsuario());
+				servPersistencia.modificarPropiedad(prop);
 			} else if (prop.getNombre().equals(FECHA_NACIMIENTO)) {
 				prop.setValor(dateFormat.format(usuario.getFecha()));
+				servPersistencia.modificarPropiedad(prop);
+			} else if(prop.getNombre().equals(MIS_LISTAS)){
+				String lineas=obtenerCodigosListas(usuario.getListasVideos());
+				prop.setValor(lineas);
+				servPersistencia.modificarPropiedad(prop);
+			} else if(prop.getNombre().equals(RECIENTES)){
+				String lineas=obtenerCodigosRecientes(usuario.getRecientes());
+				prop.setValor(lineas);
+				servPersistencia.modificarPropiedad(prop);
 			}
-			servPersistencia.modificarPropiedad(prop);
 		}
 	}
 
@@ -169,6 +202,26 @@ private List<ListaVideos> obtenerListasDesdeCodigos(String lineas) {
 		}
 
 		return usuarios;
+	}
+
+	@Override
+	public void registrarPlaylist(ListaVideos playlist) {
+		AdaptadorListaVideosTDS adaptadorLista=AdaptadorListaVideosTDS.getInstance();
+		adaptadorLista.registrarListaVideos(playlist);
+	}
+
+	@Override
+	public void borrarPlaylist(ListaVideos playlist) {
+		AdaptadorListaVideosTDS adaptadorLista=AdaptadorListaVideosTDS.getInstance();
+		adaptadorLista.borrarListaVideos(playlist);
+		
+	}
+
+	@Override
+	public void actualizarPlaylist(ListaVideos nueva) {
+		AdaptadorListaVideosTDS adaptadorLista=AdaptadorListaVideosTDS.getInstance();
+		adaptadorLista.modificarListaVideos(nueva);
+		
 	}
 	
 }

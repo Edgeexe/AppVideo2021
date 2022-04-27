@@ -77,11 +77,12 @@ public class AdaptadorVideoTDS implements IAdaptadorVideoDAO{
 		Video video = null;
 		String titulo = servPersistencia.recuperarPropiedadEntidad(eVideo, "titulo");
 		String url = servPersistencia.recuperarPropiedadEntidad(eVideo, "url");
-		int numRepro = Integer.parseInt(servPersistencia.recuperarPropiedadEntidad(eVideo, "numRepro"));
-		String etiquetas = servPersistencia.recuperarPropiedadEntidad(eVideo, "etiquetas");
+		String numRepro = servPersistencia.recuperarPropiedadEntidad(eVideo, "numRepro");
+		String etiquetas =  servPersistencia.recuperarPropiedadEntidad(eVideo, "etiquetas");;
 		String[] e = etiquetas.split(" ");
 		video=new Video(url,titulo,Arrays.asList(e));
-		video.setNumRepro(numRepro);
+		video.setNumRepro(Integer.parseInt(numRepro));
+		video.setCodigo(eVideo.getId());
 		return video;
 	}
 
