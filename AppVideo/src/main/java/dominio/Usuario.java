@@ -126,6 +126,16 @@ public class Usuario {
 	public Filtro getFiltros() {
 		return filtro;
 	}
+	
+	public String getFiltro() {
+		if(filtro instanceof NoFiltro)
+			return "No Filtro";
+		
+		else if(filtro instanceof FiltroAdultos)
+			return "Filtro Adultos";
+		
+		else return "Filtro Mis Listas";
+	}
 
 	public void setFiltros(Filtro filtros) {
 		this.filtro = filtros;
@@ -161,8 +171,20 @@ public class Usuario {
 
 
 	public void addVideoRecientes(Video v) {
-		this.recientes.add(v);
-		
+		int index=-1;
+		for (Video video : recientes) {
+			if(video.getUrl().equals(v.getUrl())) {
+				index=recientes.indexOf(video);
+				break;
+			}
+		}
+		if(index!=-1) recientes.remove(index);
+		if(this.recientes.size()<5) this.recientes.add(0,v);
+		else {
+			this.recientes.remove(4);
+			this.recientes.add(0,v);
+		}
+		v.sumarNumRepro();
 	}
 	
 	public String ListaVideosToString() {
@@ -208,6 +230,24 @@ public class Usuario {
 				return listaVideos;
 		}
 		return null;
+	}
+
+
+	public void anadirVideoaPlaylist(ListaVideos playlist, Video video) {
+		playlist.addVideo(video);
+		
+	}
+
+
+	public ListaVideos crearPlaylist(String nombre) {
+		ListaVideos v=new ListaVideos(nombre);
+		return v;
+		
+	}
+
+
+	public boolean comprobarVideo(Video vid) {
+		return filtro.esVideoOk(vid, this);
 	}
 
 }

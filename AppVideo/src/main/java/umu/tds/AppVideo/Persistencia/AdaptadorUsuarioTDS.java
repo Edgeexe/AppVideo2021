@@ -11,8 +11,6 @@ import java.util.StringTokenizer;
 
 import beans.Entidad;
 import beans.Propiedad;
-import dominio.CatalogoVideos;
-import dominio.Filtro;
 import dominio.ListaVideos;
 import dominio.Usuario;
 import dominio.Video;
@@ -46,6 +44,7 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO{
 	private static final String FECHA_NACIMIENTO = "fechaNacimiento";
 	private static final String RECIENTES = "recientes";
 	private static final String MIS_LISTAS = "mis_listas";
+	private static final String PREMIUM = "premium";
 
 	private Usuario entidadToUsuario(Entidad eUsuario) {
 		String nombre = servPersistencia.recuperarPropiedadEntidad(eUsuario, NOMBRE);
@@ -54,6 +53,7 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO{
 		String login = servPersistencia.recuperarPropiedadEntidad(eUsuario, LOGIN);
 		String password = servPersistencia.recuperarPropiedadEntidad(eUsuario, PASSWORD);
 		String fechaNacimiento = servPersistencia.recuperarPropiedadEntidad(eUsuario, FECHA_NACIMIENTO);
+		String premium= servPersistencia.recuperarPropiedadEntidad(eUsuario, PREMIUM);
 		List<Video> recientes=new LinkedList<Video>();
 		List<ListaVideos> listas=new LinkedList<ListaVideos>();
 		recientes=obtenerRecientesDesdeCodigos(servPersistencia.recuperarPropiedadEntidad(eUsuario,RECIENTES));
@@ -71,6 +71,7 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO{
 		usuario.setCodigo(eUsuario.getId());
 		usuario.setRecientes(recientes);
 		usuario.setListasVideos(listas);
+		usuario.setPremium(Boolean.valueOf(premium));
 
 		return usuario;
 	}
@@ -95,6 +96,7 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO{
 		eUser.setNombre(USUARIO);
 		eUser.setPropiedades(new ArrayList<Propiedad>(Arrays.asList(new Propiedad(NOMBRE, usuario.getNombre()),
 				new Propiedad(APELLIDOS, usuario.getApellidos()), new Propiedad(EMAIL, usuario.getEmail()),
+				new Propiedad(PREMIUM, String.valueOf(usuario.isPremium())), new Propiedad(EMAIL, usuario.getEmail()),
 				new Propiedad(LOGIN, usuario.getUsuario()), new Propiedad(PASSWORD, usuario.getContrasena()),
 				new Propiedad(FECHA_NACIMIENTO, dateFormat.format(usuario.getFecha())),new Propiedad(RECIENTES,obtenerCodigosRecientes(usuario.getRecientes())),
 				new Propiedad(MIS_LISTAS,obtenerCodigosListas(usuario.getListasVideos())))));
@@ -172,6 +174,9 @@ private List<ListaVideos> obtenerListasDesdeCodigos(String lineas) {
 			} else if (prop.getNombre().equals(LOGIN)) {
 				prop.setValor(usuario.getUsuario());
 				servPersistencia.modificarPropiedad(prop);
+			} else if (prop.getNombre().equals(PREMIUM)) {
+				prop.setValor(String.valueOf(usuario.isPremium()));
+				servPersistencia.modificarPropiedad(prop);
 			} else if (prop.getNombre().equals(FECHA_NACIMIENTO)) {
 				prop.setValor(dateFormat.format(usuario.getFecha()));
 				servPersistencia.modificarPropiedad(prop);
@@ -202,26 +207,6 @@ private List<ListaVideos> obtenerListasDesdeCodigos(String lineas) {
 		}
 
 		return usuarios;
-	}
-
-	@Override
-	public void registrarPlaylist(ListaVideos playlist) {
-		AdaptadorListaVideosTDS adaptadorLista=AdaptadorListaVideosTDS.getInstance();
-		adaptadorLista.registrarListaVideos(playlist);
-	}
-
-	@Override
-	public void borrarPlaylist(ListaVideos playlist) {
-		AdaptadorListaVideosTDS adaptadorLista=AdaptadorListaVideosTDS.getInstance();
-		adaptadorLista.borrarListaVideos(playlist);
-		
-	}
-
-	@Override
-	public void actualizarPlaylist(ListaVideos nueva) {
-		AdaptadorListaVideosTDS adaptadorLista=AdaptadorListaVideosTDS.getInstance();
-		adaptadorLista.modificarListaVideos(nueva);
-		
 	}
 	
 }

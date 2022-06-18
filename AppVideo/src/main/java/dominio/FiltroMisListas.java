@@ -25,7 +25,12 @@ public class FiltroMisListas implements Filtro {
 
 	@Override
 	public boolean esVideoOk(Video video, Usuario usuario) {
-		// TODO Auto-generated method stub
+		for (ListaVideos lista : usuario.getListasVideos()) {
+			for (Video vi : lista.getListaVideos()) {
+				if(vi.getUrl().equals(video.getUrl()))
+					return true;
+			}
+		}
 		return false;
 	}
 

@@ -24,7 +24,6 @@ public class NoFiltro implements Filtro {
 
 	@Override
 	public boolean esVideoOk(Video video, Usuario usuario) {
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 }

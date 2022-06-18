@@ -2,7 +2,6 @@ package umu.tds.AppVideo.Persistencia;
 
 import java.util.List;
 
-import dominio.ListaVideos;
 import dominio.Usuario;
 
 public interface IAdaptadorUsuarioDAO {
@@ -12,7 +11,4 @@ public interface IAdaptadorUsuarioDAO {
 	void update(Usuario asistente);
 	Usuario get(int id);
 	List<Usuario> getAll();
-	void registrarPlaylist(ListaVideos playlist);
-	void borrarPlaylist(ListaVideos playlist);
-	void actualizarPlaylist(ListaVideos nueva);
 }

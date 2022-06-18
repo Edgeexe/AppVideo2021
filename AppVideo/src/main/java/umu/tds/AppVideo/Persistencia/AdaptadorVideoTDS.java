@@ -2,8 +2,10 @@ package umu.tds.AppVideo.Persistencia;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import beans.Entidad;
 import beans.Propiedad;
@@ -32,13 +34,18 @@ public class AdaptadorVideoTDS implements IAdaptadorVideoDAO{
 		} catch (NullPointerException e) {}
 		if(eVideo !=null) return;
 		eVideo=new Entidad();
+		
+		for (Etiqueta e : video.getEtiquetas()) {
+			AdaptadorEtiquetaTDS adaptadorEtiqueta=AdaptadorEtiquetaTDS.getInstance();
+			adaptadorEtiqueta.registrarEtiqueta(e);
+		}
 		eVideo.setNombre("video");
 		eVideo.setPropiedades(
 				new ArrayList<Propiedad>(Arrays.asList(
 						  new Propiedad("url",String.valueOf(video.getUrl())),
 						  new Propiedad("titulo",String.valueOf(video.getTitulo())),
 						  new Propiedad("numRepro",String.valueOf(video.getNumRepro())),
-						  new Propiedad("etiquetas",String.valueOf(video.etiquetaToString()))
+						  new Propiedad("etiquetas",obtenerCodigosEtiquetas(video.getEtiquetas()))
 						)
 					)
 				);
@@ -66,7 +73,9 @@ public class AdaptadorVideoTDS implements IAdaptadorVideoDAO{
 			} else if (prop.getNombre().equals("numRepro")) {
 				prop.setValor(String.valueOf(video.getNumRepro()));
 			} else if (prop.getNombre().equals("etiquetas")) {
-				prop.setValor(video.etiquetaToString());
+				String lineas=obtenerCodigosEtiquetas(video.getEtiquetas());
+				prop.setValor(lineas);
+				servPersistencia.modificarPropiedad(prop);
 			}
 			servPersistencia.modificarPropiedad(prop);
 		}
@@ -78,12 +87,23 @@ public class AdaptadorVideoTDS implements IAdaptadorVideoDAO{
 		String titulo = servPersistencia.recuperarPropiedadEntidad(eVideo, "titulo");
 		String url = servPersistencia.recuperarPropiedadEntidad(eVideo, "url");
 		String numRepro = servPersistencia.recuperarPropiedadEntidad(eVideo, "numRepro");
-		String etiquetas =  servPersistencia.recuperarPropiedadEntidad(eVideo, "etiquetas");;
-		String[] e = etiquetas.split(" ");
-		video=new Video(url,titulo,Arrays.asList(e));
+		List<Etiqueta> etiquetas =  obtenerEtiquetasDesdeCodigos(servPersistencia.recuperarPropiedadEntidad(eVideo, "etiquetas"));
+		video=new Video(url,titulo,etiquetas);
 		video.setNumRepro(Integer.parseInt(numRepro));
 		video.setCodigo(eVideo.getId());
 		return video;
+	}
+
+	private List<Etiqueta> obtenerEtiquetasDesdeCodigos(String lineas) {
+		List<Etiqueta> lineasVenta = new LinkedList<Etiqueta>();
+		 StringTokenizer strTok = new StringTokenizer(lineas, " ");
+		 AdaptadorEtiquetaTDS adaptadorE =
+		AdaptadorEtiquetaTDS.getInstance();
+		 while (strTok.hasMoreTokens()) {
+		 lineasVenta.add(adaptadorE.recuperarEtiqueta(
+		Integer.valueOf((String) strTok.nextElement())));
+		 }
+		 return lineasVenta;
 	}
 
 	public List<Video> recuperarTodosVideo() {
@@ -94,6 +114,15 @@ public class AdaptadorVideoTDS implements IAdaptadorVideoDAO{
 			videos.add(recuperarVideo(eVideo.getId()));
 		}
 		return videos;
+	}
+
+
+	private String obtenerCodigosEtiquetas(HashSet<Etiqueta> hashSet) {
+		String lineas = "";
+		 for (Etiqueta e : hashSet) {
+		 lineas += e.getCodigo() + " ";
+		 }
+		 return lineas.trim();
 	}
 
 }

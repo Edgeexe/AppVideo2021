@@ -2,6 +2,7 @@ package umu.tds.AppVideo.GUI;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import java.awt.Rectangle;
 import java.awt.Color;
@@ -10,38 +11,26 @@ import java.awt.Dimension;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
-import javax.swing.JTextField;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
-import java.util.ArrayList;
+import java.io.FileNotFoundException;
 import java.util.EventObject;
 import java.util.LinkedList;
-import java.util.List;
+
 import java.awt.Font;
 import javax.swing.SwingConstants;
+
+import com.itextpdf.text.DocumentException;
+
 import java.awt.Insets;
-import java.awt.BorderLayout;
-import javax.swing.JList;
-import javax.swing.JOptionPane;
-import javax.swing.AbstractListModel;
-import javax.swing.Box;
-import javax.swing.border.BevelBorder;
-import javax.swing.table.TableColumn;
-import javax.swing.table.TableColumnModel;
 
-import dominio.CatalogoVideos;
-import dominio.ListaVideos;
-import dominio.Video;
+import dominio.*;
 
-import javax.swing.JTextPane;
-
-import javax.swing.BoxLayout;
 import java.awt.*;
 import javax.swing.JToggleButton;
 
@@ -51,663 +40,307 @@ import tds.video.VideoWeb;
 import umu.tds.AppVideo.Persistencia.DAOException;
 import umu.tds.Controlador.Controlador;
 
-import javax.swing.JTable;
-import javax.swing.JScrollPane;
-import javax.swing.JScrollBar;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.JComboBox;
+
 
 public class VentanaPrincipal extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private int posX=0;
 	private int	posY=0;
-	private JTextField escribir_busqueda;
-	private JTable tablaVideos_explorar;
-	private JTable tablaVideos_crear_lista;
-	private JTable tablaVideos_vertical1;
-	private JTable tablaVideos_vertical2;
+
 	private static VideoWeb vWeb = new VideoWeb();
-	private static Controlador appVideo = Controlador.getUnicaInstancia();
-	private JTextField lista;
-	private JTextField nom_video;
-	private ListaVideos playlist;
+
+	private static PanelMisLIstas misListas;
+	private static PanelExplorar panelExplorar;
+	private static PanelCrearListas panelNuevaLista;
+	private static Recientes recientes;
 	
 
 	public VentanaPrincipal() throws DAOException {
 		
+		//array para añadir a las opciones de seleccionar un filtro
+		String[] filtros= {"No Filtro","Filtro Adulto","Filtro Mis Listas"};
+		
+		setUndecorated(true);
+		
+		//Creación panel recientes
+		recientes=new Recientes();
+		
+		//Creación panel mis listas
+		misListas=new PanelMisLIstas();
+		
+		//Creación panel explorar
+		panelExplorar=new PanelExplorar();
+		
+		//Creación panel crear listas
+		panelNuevaLista=new PanelCrearListas();
+		
+		
+		
 		setBounds(new Rectangle(100, 100, 1280, 720));
 		setLocationRelativeTo(null);
-		setUndecorated(true);
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		getContentPane().setLayout(null);
 		
-		JPanel panel_layout = new JPanel();
-		panel_layout.setBounds(207, 96, 1073, 624);
-		getContentPane().add(panel_layout);
-		panel_layout.setLayout(new CardLayout(0, 0));
+		//Creación panel para cambiar entre los paneles creados
+		JPanel panelLayout = new JPanel();
+		panelLayout.setBounds(207, 96, 1073, 624);
+		getContentPane().add(panelLayout);
+		panelLayout.setLayout(new CardLayout(0, 0));
 		
+		panelLayout.add(recientes, "recientes");
 		
+		panelLayout.add(misListas,"mis_listas");
 
-		JPanel panel_Explorar = new JPanel();
-		panel_Explorar.setBounds(207, 96, 1073, 624);
-		panel_Explorar.setLayout(new BorderLayout(0, 0));
-		panel_layout.add(panel_Explorar,"explorar");
+		panelLayout.add(panelExplorar,"explorar");
 		
+		panelLayout.add(panelNuevaLista, "crear_listas");
 		
-		JPanel panel_resultado = new JPanel();
-		panel_resultado.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		panel_resultado.setBackground(Color.LIGHT_GRAY);
-		panel_Explorar.add(panel_resultado, BorderLayout.CENTER);
+		//Panel cabecera de la Ventana principal
+		JPanel panelCabecera = new JPanel();
+		panelCabecera.setOpaque(false);
+		panelCabecera.setBorder(null);
+		panelCabecera.setBounds(0, 0, 1280, 95);
+		getContentPane().add(panelCabecera);
+		panelCabecera.setLayout(null);
 		
-
-		tablaVideos_explorar = new JTable();
-		tablaVideos_explorar.setBounds(1, 26, 450, 0);
-		tablaVideos_explorar.setDefaultRenderer(Object.class, new VideoLabelTabla());
-			
-		LineaVideos gVideos = new LineaVideos();
-		LinkedList<LineaVideos> listaCVideos = new LinkedList<LineaVideos>();
-		ArrayList<Video> videosAux  = (ArrayList<Video>) appVideo.getVideos();	
-		listaCVideos.add(gVideos);
-		TablaVideos tm = new TablaVideos(6);
-		
-		//tm.rellenarTabla(videosAux, vWeb);
-		
-		tablaVideos_explorar.setModel(tm);
-		tablaVideos_explorar.setRowHeight(175); 
-		tablaVideos_explorar.getTableHeader().setUI(null);  
-		TableColumnModel colModel=tablaVideos_explorar.getColumnModel();
-		for(int i=0; i<6; i++)
-		{
-			TableColumn col=colModel.getColumn(i);
-			col.setPreferredWidth(145);
-		}
-		panel_resultado.setLayout(null);
-		
-		tablaVideos_explorar.setShowGrid(false);
-		JScrollPane js=new JScrollPane(tablaVideos_explorar);
-		js.setBounds(0, 0, 979, 590);
-		js.setBackground(Color.GRAY);
-		panel_resultado.add(js);
-		
-		JPanel panel_este = new JPanel();
-		panel_este.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		panel_este.setBackground(Color.LIGHT_GRAY);
-		panel_Explorar.add(panel_este, BorderLayout.EAST);
-		panel_este.setLayout(new BoxLayout(panel_este, BoxLayout.Y_AXIS));
-		
-		JList<String> list = new JList<String>();
-		list.setLayoutOrientation(JList.VERTICAL_WRAP);
-		list.setModel(new AbstractListModel<String>() {
-			private static final long serialVersionUID = -7605725966827348811L;
-			String[] values = new String[] {"Agfsgsbs", "Bsfsaavv", "vzvzbbsC", "Dcdssca", "EcsCCvf", "cscscjxF", "aXXACdfG"};
-			public int getSize() {
-				return values.length;
-			}
-			public String getElementAt(int index) {
-				return values[index];
-			}
-		});
-		panel_este.add(list);
-		panel_este.add(Box.createRigidArea(new Dimension(90,90)));
-		
-		JTextPane textPane = new JTextPane();
-		panel_este.add(textPane);
-		
-		JPanel panel_busqueda = new JPanel();
-		panel_busqueda.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		panel_busqueda.setBackground(Color.LIGHT_GRAY);
-		panel_Explorar.add(panel_busqueda, BorderLayout.NORTH);
-		panel_busqueda.setLayout(new BoxLayout(panel_busqueda, BoxLayout.X_AXIS));
-		
-		JLabel lbl_busqueda = new JLabel("Búsqueda: ");
-		panel_busqueda.add(lbl_busqueda);
-		panel_busqueda.add(Box.createRigidArea(new Dimension(20,30)));
-		
-		escribir_busqueda = new JTextField();
-		panel_busqueda.add(escribir_busqueda);
-		escribir_busqueda.setColumns(10);
-		
-		JButton boton_buscar = new JButton("Buscar");
-		panel_busqueda.add(boton_buscar);
-		boton_buscar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				String texto = escribir_busqueda.getText();
-				if (!texto.equals("")) {
-					List<Video> videoBuscado;
-					try {
-						videoBuscado = appVideo.getVideos(texto);
-						int filas = tablaVideos_explorar.getRowCount();
-						for (int i = filas-1; i >= 0; i--)
-							tm.removeRow(i);
-						if (videoBuscado != null)
-							tm.rellenarTabla(videoBuscado, vWeb);
-					} catch (DAOException e1) {
-						e1.printStackTrace();
-					}
-					
-				}
-				else {
-					int filas = tablaVideos_explorar.getRowCount();
-					for (int i = filas-1; i >= 0; i--)
-						tm.removeRow(i);
-					List<Video> todosVideos;
-					try {
-						todosVideos = appVideo.getVideos();
-						tm.rellenarTabla(todosVideos, vWeb);
-					} catch (DAOException e1) {
-						e1.printStackTrace();
-					}		
-				}
-				tm.fireTableDataChanged();
-				validate();	
-			}
-		});
-		
-		panel_busqueda.add(Box.createRigidArea(new Dimension(30,30)));
-		
-		JButton btn_Reset = new JButton("Reset");
-		panel_busqueda.add(btn_Reset);
-		
-		btn_Reset.addActionListener(ev -> {
-			int filas = tablaVideos_explorar.getRowCount();
-			for (int i = filas-1; i >= 0; i--)
-				tm.removeRow(i);
-			tm.fireTableDataChanged();
-			panel_busqueda.repaint();
-			panel_busqueda.revalidate();
-			validate();
-		});
-		
-		JPanel panel_nuevaLista = new JPanel();
-		panel_layout.add(panel_nuevaLista, "crear_listas");
-		panel_nuevaLista.setLayout(null);
-		
-		JLabel nombre_lista = new JLabel("Nombre Lista");
-		nombre_lista.setBounds(66, 11, 86, 14);
-		panel_nuevaLista.add(nombre_lista);
-		
-		lista = new JTextField();
-		lista.setBounds(10, 36, 179, 20);
-		panel_nuevaLista.add(lista);
-		lista.setColumns(10);
-		
-		tablaVideos_crear_lista = new JTable();
-		tablaVideos_crear_lista.setBounds(1, 26, 450, 0);
-		tablaVideos_crear_lista.setDefaultRenderer(Object.class, new VideoLabelTabla());
-		
-		TablaVideos tm2 = new TablaVideos(6);
-				
-		tablaVideos_crear_lista.setModel(tm2);
-		tablaVideos_crear_lista.setRowHeight(175); 
-		tablaVideos_crear_lista.getTableHeader().setUI(null);  
-		colModel=tablaVideos_crear_lista.getColumnModel();
-		for(int i=0; i<6; i++)
-		{
-			TableColumn col=colModel.getColumn(i);
-			col.setPreferredWidth(145);
-		}
-		
-		tablaVideos_crear_lista.setShowGrid(false);
-		
-		JScrollPane scrollPane_1 = new JScrollPane(tablaVideos_crear_lista);
-		scrollPane_1.setBounds(272, 67, 770, 437);
-		panel_nuevaLista.add(scrollPane_1);
-		
-		tablaVideos_vertical1 = new JTable();
-		tablaVideos_vertical1.setBounds(1, 26, 450, 0);
-		tablaVideos_vertical1.setDefaultRenderer(Object.class, new VideoLabelTabla());
-		
-		TablaVideos tm1 = new TablaVideos(1);
-		
-		//tm1.rellenarTabla(videosAux, vWeb);
-		
-		tablaVideos_vertical1.setModel(tm1);
-		tablaVideos_vertical1.setRowHeight(175); 
-		tablaVideos_vertical1.getTableHeader().setUI(null);  
-		TableColumnModel colModel2=tablaVideos_vertical1.getColumnModel();
-		for(int i=0; i<1; i++)
-		{
-			TableColumn col=colModel2.getColumn(i);
-			col.setPreferredWidth(145);
-		}
-		
-		tablaVideos_vertical1.setShowGrid(false);
-		
-		JScrollPane scrollPane = new JScrollPane(tablaVideos_vertical1);
-		scrollPane.setBounds(21, 100, 179, 426);
-		panel_nuevaLista.add(scrollPane);
-		
-		JButton buscar_lista = new JButton("Buscar");
-		buscar_lista.setBounds(10, 67, 89, 23);
-		panel_nuevaLista.add(buscar_lista);
-		buscar_lista.addActionListener(new ActionListener(){
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				ListaVideos pl=appVideo.buscarPlaylist(lista.getText());
-				if(pl!=null) {
-					int decision=JOptionPane.showConfirmDialog(tablaVideos_crear_lista,"¿Le gustría editar la playlist existente?","La Playlist existe",JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
-					if(decision == JOptionPane.YES_OPTION) {
-						playlist=pl;
-						for(int i=0;i<tablaVideos_vertical1.getRowCount();i++) tm1.removeRow(i);
-						for (Video video : playlist.getListaVideos())tm1.addRow(new LineaVideos(video));
-						tm1.fireTableDataChanged();
-						validate();	
-					}
-				}
-				else {
-					int decision=JOptionPane.showConfirmDialog(tablaVideos_crear_lista,"¿Le gustría crear la playlist?","La Playlist no existe",JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
-					if(decision == JOptionPane.YES_OPTION)
-						playlist=new ListaVideos(lista.getText());
-				}
-			}
-			
-		});
-		
-		JButton eliminar = new JButton("Eliminar");
-		eliminar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				int output = JOptionPane.showConfirmDialog(tablaVideos_vertical1, "Borrar Playlist","¿Quieres borrar la playlist?", JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE);
-				if (output == JOptionPane.YES_OPTION) {
-					appVideo.eliminarPlaylist(playlist);
-				}
-			}
-		});
-		eliminar.setBounds(100, 67, 89, 23);
-		panel_nuevaLista.add(eliminar);
-				
-		JButton anadir_boton = new JButton("Añadir");
-		anadir_boton.setBounds(10, 546, 89, 23);
-		panel_nuevaLista.add(anadir_boton);
-		
-		anadir_boton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				Video video=(Video) tablaVideos_crear_lista.getValueAt(tablaVideos_crear_lista.getSelectedRow(),tablaVideos_crear_lista.getSelectedColumn());
-				playlist.addVideo(CatalogoVideos.getUnicaInstancia().getVideo(video.getUrl()));
-				for(int i=0;i<tablaVideos_vertical1.getRowCount();i++) tm1.removeRow(i);
-				tm1.rellenarTabla(playlist.getListaVideos(), vWeb);
-				tm1.fireTableDataChanged();
-				validate();	
-			}
-		});
-		
-		JButton quitar_boton = new JButton("Quitar");
-		quitar_boton.setBounds(111, 546, 89, 23);
-		panel_nuevaLista.add(quitar_boton);
-		
-		quitar_boton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				Video video=(Video) tablaVideos_vertical1.getValueAt(tablaVideos_vertical1.getSelectedRow(),tablaVideos_vertical1.getSelectedColumn());
-				playlist.removeVideo(video);
-				for(int i=0;i<tablaVideos_vertical1.getRowCount();i++) tm1.removeRow(i);
-				for (Video vi : playlist.getListaVideos())tm1.addRow(new LineaVideos(vi));
-				tm1.fireTableDataChanged();
-				validate();					
-			}		
-		});
-		
-		JButton boton_aceptar = new JButton("Aceptar");
-		boton_aceptar.setBounds(63, 591, 89, 23);
-		panel_nuevaLista.add(boton_aceptar);
-		
-		boton_aceptar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {			
-				ListaVideos pl_antigua=appVideo.buscarPlaylist(lista.getText());
-				if(pl_antigua==null) {
-					appVideo.anadirPlaylist(playlist);
-				}
-				else {
-					appVideo.actualizarPlaylist(pl_antigua,playlist);
-				}
-				int filas = tablaVideos_vertical1.getRowCount();
-				for (int i = filas-1; i >= 0; i--)
-					tm1.removeRow(i);
-				tm1.fireTableDataChanged();
-				panel_nuevaLista.repaint();
-				panel_nuevaLista.revalidate();
-				validate();
-			}		
-		});
-		
-		
-		
-		
-		JLabel lblNewLabel = new JLabel("Título Vídeo");
-		lblNewLabel.setBounds(476, 11, 120, 14);
-		panel_nuevaLista.add(lblNewLabel);
-		
-		nom_video = new JTextField();
-		nom_video.setBounds(272, 36, 535, 20);
-		panel_nuevaLista.add(nom_video);
-		nom_video.setColumns(10);
-		
-		JButton buscar_2 = new JButton("Buscar");
-		buscar_2.setBounds(817, 35, 89, 23);
-		panel_nuevaLista.add(buscar_2);
-		buscar_2.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				String texto = nom_video.getText();
-				if (!texto.equals("")) {
-					List<Video> videoBuscado;
-					try {
-						videoBuscado = appVideo.getVideos(texto);
-						int filas = tablaVideos_crear_lista.getRowCount();
-						for (int i = filas-1; i >= 0; i--)
-							tm2.removeRow(i);
-						if (videoBuscado != null)
-							tm2.rellenarTabla(videoBuscado, vWeb);
-					} catch (DAOException e1) {
-						e1.printStackTrace();
-					}
-					
-				}
-				else {
-					int filas = tablaVideos_crear_lista.getRowCount();
-					for (int i = filas-1; i >= 0; i--)
-						tm2.removeRow(i);
-					List<Video> todosVideos;
-					try {
-						todosVideos = appVideo.getVideos();
-						tm2.rellenarTabla(todosVideos, vWeb);
-					} catch (DAOException e1) {
-						e1.printStackTrace();
-					}		
-				}
-				tm2.fireTableDataChanged();
-				validate();	
-			}
-		});
-		
-		JButton reset2 = new JButton("Reset");
-		reset2.setBounds(916, 35, 89, 23);
-		panel_nuevaLista.add(reset2);
-		
-		JPanel panel_mis_listas = new JPanel();
-		panel_layout.add(panel_mis_listas, "mis_listas");
-		panel_mis_listas.setLayout(null);
-		
-		JLabel titulo_cancion = new JLabel("");
-		titulo_cancion.setFont(new Font("Times New Roman", Font.PLAIN, 20));
-		titulo_cancion.setBounds(349, 147, 360, 14);
-		panel_mis_listas.add(titulo_cancion);
-		vWeb.setBounds(349, 172, 360, 220);
-		panel_mis_listas.add(vWeb);
-		
-		tablaVideos_vertical2 = new JTable();
-		tablaVideos_vertical2.setBounds(1, 26, 450, 0);
-		tablaVideos_vertical2.setDefaultRenderer(Object.class, new VideoLabelTabla());
-		
-		TablaVideos tm3 = new TablaVideos(1);
-		
-		//tm1.rellenarTabla(videosAux, vWeb);
-		
-		tablaVideos_vertical2.setModel(tm3);
-		tablaVideos_vertical2.setRowHeight(175); 
-		tablaVideos_vertical2.getTableHeader().setUI(null);  
-		colModel2=tablaVideos_vertical2.getColumnModel();
-		for(int i=0; i<1; i++)
-		{
-			TableColumn col=colModel2.getColumn(i);
-			col.setPreferredWidth(145);
-		}
-		
-		tablaVideos_vertical2.setShowGrid(false);
-		
-		JLabel num_videos = new JLabel();
-		num_videos.setBounds(20, 460, 157, 14);
-		panel_mis_listas.add(num_videos);
-		
-		JScrollPane scrollPane_vert = new JScrollPane(tablaVideos_vertical2);
-		scrollPane_vert.setBounds(10, 120, 167, 329);
-		panel_mis_listas.add(scrollPane_vert);
-		
-		JComboBox<String> comboBox = new JComboBox<String>();
-		comboBox.setBounds(10, 32, 167, 22);
-		panel_mis_listas.add(comboBox);
-		comboBox.addItemListener((ItemListener) new ItemListener() {
-			@Override
-			public void itemStateChanged(ItemEvent e) {
-				String nombre_playlist= (String) comboBox.getSelectedItem();
-				ListaVideos lista=Controlador.getUnicaInstancia().getListaVideo(nombre_playlist);
-				int num;
-				if(lista==null || lista.getListaVideos()==null) {
-					num=0;
-					return;
-				}
-				else num=lista.getListaVideos().size();
-				num_videos.setText("Num de videos: "+num);
-				for(int i=0;i<tablaVideos_vertical2.getRowCount();i++) tm3.removeRow(i);
-				for (Video video : lista.getListaVideos())tm3.addRow(new LineaVideos(video));
-				tm3.fireTableDataChanged();
-				validate();	
-			}
-			
-		});
-		
-		JLabel seleccionarLista = new JLabel("Selecciona la lista:");
-		seleccionarLista.setBounds(10, 11, 107, 14);
-		panel_mis_listas.add(seleccionarLista);
-		
-		
-		JButton reproducir = new JButton("Reproducir");
-		reproducir.setBounds(30, 65, 129, 23);
-		panel_mis_listas.add(reproducir);
-		
-		reproducir.addActionListener(ac->{
-			Video video=(Video) tablaVideos_vertical2.getValueAt(tablaVideos_vertical2.getSelectedRow(),tablaVideos_vertical2.getSelectedColumn());
-			titulo_cancion.setText(video.getTitulo());
-			vWeb.playVideo(video.getUrl());
-			validate();
-		});
-		
-		JButton cancelar = new JButton("Cancelar");
-		cancelar.setBounds(43, 494, 89, 23);
-		panel_mis_listas.add(cancelar);
-		cancelar.addActionListener(ev -> {
-			int filas = tablaVideos_vertical2.getRowCount();
-			for (int i = filas-1; i >= 0; i--) tm3.removeRow(i);
-			titulo_cancion.setText("");
-			vWeb.cancel();
-			tm3.fireTableDataChanged();
-			panel_mis_listas.repaint();
-			panel_mis_listas.revalidate();
-			validate();
-		});
-			
-		JPanel panel_cabecera = new JPanel();
-		panel_cabecera.setOpaque(false);
-		panel_cabecera.setBorder(null);
-		panel_cabecera.setBounds(0, 0, 1280, 95);
-		getContentPane().add(panel_cabecera);
-		panel_cabecera.setLayout(null);
-		
+		//JLabel con El icono de la App
 		JLabel logo = new JLabel("");
 		logo.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/umu/tds/AppVideo/Resources/LogoNoText.png")));
 		logo.setBounds(45, 5, 100, 95);
-		panel_cabecera.add(logo);
+		panelCabecera.add(logo);
 		
+		//Jlabel con el nombre del usuario que ha entrado a la App
 		JLabel textoUsuario = new JLabel(Controlador.getUnicaInstancia().getUsuarioActual().getUsuario());
 		textoUsuario.setFont(new Font("Lato Black", Font.BOLD, 15));
 		textoUsuario.setForeground(Color.WHITE);
 		textoUsuario.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/umu/tds/AppVideo/Resources/UserIcon.png")));
 		int width = textoUsuario.getText().length()*15;
 		textoUsuario.setBounds(277, 33, 241, 29);
-		panel_cabecera.add(textoUsuario);
+		panelCabecera.add(textoUsuario);
 		
 		RoundedPanel panel = new RoundedPanel(45, new Color(41,41,41));
 		panel.setBounds(275, 28, 253, 39);
 		panel.setOpaque(false);
-		panel_cabecera.add(panel);
+		panelCabecera.add(panel);
 		
-		JToggleButton boton_Premium = new JToggleButton("");
-		boton_Premium.setSelectedIcon(new ImageIcon(VentanaPrincipal.class.getResource("/umu/tds/AppVideo/Resources/PremiumStatus.png")));
-		boton_Premium.setContentAreaFilled(false);
-		boton_Premium.setBorderPainted(false);
-		boton_Premium.setRolloverSelectedIcon(new ImageIcon(VentanaPrincipal.class.getResource("/umu/tds/AppVideo/Resources/PremiumStatus.png")));
-		boton_Premium.setDisabledIcon(new ImageIcon(VentanaPrincipal.class.getResource("/umu/tds/AppVideo/Resources/PremiumButton.png")));
-		boton_Premium.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/umu/tds/AppVideo/Resources/PremiumButton.png")));
-		boton_Premium.setBorder(null);
-		boton_Premium.setBounds(226, 28, 39, 39);
-		panel_cabecera.add(boton_Premium);
+		//Botón Premium para seleccionar los filtros
+		JToggleButton botonPremium = new JToggleButton("");
+		botonPremium.setContentAreaFilled(false);
+		botonPremium.setBorderPainted(false);
+		botonPremium.setSelectedIcon(new ImageIcon(VentanaPrincipal.class.getResource("/umu/tds/AppVideo/Resources/PremiumStatus.png")));
+		botonPremium.setRolloverSelectedIcon(new ImageIcon(VentanaPrincipal.class.getResource("/umu/tds/AppVideo/Resources/PremiumStatus.png")));
+		botonPremium.setDisabledIcon(new ImageIcon(VentanaPrincipal.class.getResource("/umu/tds/AppVideo/Resources/PremiumButton.png")));
+		botonPremium.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/umu/tds/AppVideo/Resources/PremiumButton.png")));
+		botonPremium.setBorder(null);
+		botonPremium.setBounds(226, 28, 39, 39);
+		panelCabecera.add(botonPremium);
 		
-		boton_Premium.addMouseListener(new MouseAdapter() {
-			public void mouseClicked(MouseEvent evt) {
-				//TODO: Hacer el boton no clickeable cuando el usuario ya sea premium
-			}
+		//Texto que indica el filtro actual
+		JLabel filtroActual = new JLabel("Filtro Actual: "+Controlador.getUnicaInstancia().getFiltroActual());
+		filtroActual.setFont(new Font("Dialog", Font.BOLD, 15));
+		filtroActual.setForeground(Color.WHITE);
+		filtroActual.setBounds(542, 36, 272, 23);
+		panelCabecera.add(filtroActual);
+		
+		//Botón para generar el pdf si el usuario es premium junto a su evento
+		JButton generarPDF = new JButton("Generar PDF");
+		generarPDF.setFont(new Font("Dialog", Font.BOLD, 14));
+		generarPDF.setBounds(940, 33, 151, 28);
+		panelCabecera.add(generarPDF);
+		
+		generarPDF.addActionListener(ev->{
+			if(Controlador.getUnicaInstancia().usuarioActualEsPremium())
+				try {
+					JFileChooser fc = new JFileChooser();
+					fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+					fc.showOpenDialog(fc);
+					File directorio=fc.getSelectedFile();
+					Controlador.getUnicaInstancia().generarPDf(directorio.toString());
+					JOptionPane.showMessageDialog(generarPDF, "El PDF ha sido creado correctamente en "+directorio+"\\listasVideos.pdf","Éxito" ,JOptionPane.INFORMATION_MESSAGE,null);
+				} catch (FileNotFoundException e1) {
+					 JOptionPane.showMessageDialog(generarPDF,"No se ha encontrado el archivo", "File not Found", JOptionPane.ERROR_MESSAGE,null);
+					e1.printStackTrace();
+				} catch (DocumentException e1) {
+					 JOptionPane.showMessageDialog(generarPDF,"No se ha podido crear el archivo PDF", "Error", JOptionPane.ERROR_MESSAGE,null);
+					e1.printStackTrace();
+				}
+			else JOptionPane.showMessageDialog(generarPDF,"Debe ser Usuario Premium para esta funcionalidad", "Error selección de filtro", JOptionPane.ERROR_MESSAGE,null);
+			
 		});
 		
-		JPanel panel_botones = new JPanel();
-		panel_botones.setOpaque(false);
-		panel_botones.setBorder(null);
-		panel_botones.setBounds(0, 106, 206, 614);
-		getContentPane().add(panel_botones);
-		panel_botones.setLayout(null);
+		//evento del boton premium 
+		botonPremium.addActionListener(ev-> {
+			if(Controlador.getUnicaInstancia().usuarioActualEsPremium()) {
+				String opcion=(String) JOptionPane.showInputDialog(botonPremium, "Seleccione el filtro que quiere usar", "Selección de filtro", JOptionPane.QUESTION_MESSAGE,null,filtros,filtros[0]);
+				Controlador.getUnicaInstancia().cambiarFiltro(opcion);
+				 filtroActual.setText("Filtro Actual: "+Controlador.getUnicaInstancia().getFiltroActual());
+			}
+			else JOptionPane.showMessageDialog(botonPremium,"Debe ser Usuario Premium para esta funcionalidad", "Error selección de filtro", JOptionPane.ERROR_MESSAGE,null);
+				botonPremium.setSelected(false);
+		});
 		
-		JButton boton_Explorar = new JButton("        Explorar");
-		boton_Explorar.setMargin(new Insets(2, 25, 2, 14));
-		boton_Explorar.setRequestFocusEnabled(false);
-		boton_Explorar.setHorizontalAlignment(SwingConstants.LEFT);
-		boton_Explorar.setContentAreaFilled(false);
-		boton_Explorar.setBorderPainted(false);
-		boton_Explorar.setOpaque(false);
-		boton_Explorar.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/umu/tds/AppVideo/Resources/HomeIcon.png")));
-		boton_Explorar.setFont(new Font("Lato Black", Font.BOLD, 15));
-		boton_Explorar.setForeground(Color.WHITE);
-		boton_Explorar.setBounds(0, 139, 206, 46);
-		panel_botones.add(boton_Explorar);
+		//Creación de panel con los botones de la Ventana Principal
+		JPanel panelBotones = new JPanel();
+		panelBotones.setOpaque(false);
+		panelBotones.setBorder(null);
+		panelBotones.setBounds(0, 106, 206, 614);
+		getContentPane().add(panelBotones);
+		panelBotones.setLayout(null);
 		
-		boton_Explorar.addMouseListener(new MouseAdapter() {
+		//Botón explorar con su evento
+		JButton botonExplorar = new JButton("        Explorar");
+		botonExplorar.setMargin(new Insets(2, 25, 2, 14));
+		botonExplorar.setRequestFocusEnabled(false);
+		botonExplorar.setHorizontalAlignment(SwingConstants.LEFT);
+		botonExplorar.setContentAreaFilled(false);
+		botonExplorar.setBorderPainted(false);
+		botonExplorar.setOpaque(false);
+		botonExplorar.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/umu/tds/AppVideo/Resources/HomeIcon.png")));
+		botonExplorar.setFont(new Font("Lato Black", Font.BOLD, 15));
+		botonExplorar.setForeground(Color.WHITE);
+		botonExplorar.setBounds(0, 139, 206, 46);
+		panelBotones.add(botonExplorar);
+		
+		botonExplorar.addMouseListener(new MouseAdapter() {
 		    public void mouseEntered(MouseEvent evt) {
-		    	boton_Explorar.setContentAreaFilled(true);
-		    	boton_Explorar.setBackground(new Color(41,41,41));
+		    	botonExplorar.setContentAreaFilled(true);
+		    	botonExplorar.setBackground(new Color(41,41,41));
 		    }
 
 		    public void mouseExited(MouseEvent evt) {
-		    	boton_Explorar.setContentAreaFilled(false);		    
+		    	botonExplorar.setContentAreaFilled(false);		    
 		    	}
 		    
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if(e.getButton()==MouseEvent.BUTTON1) {
-					CardLayout cl=(CardLayout)(panel_layout.getLayout());
-					cl.show(panel_layout, "explorar");
+					CardLayout cl=(CardLayout)(panelLayout.getLayout());
+					cl.show(panelLayout, "explorar");
 				}
 			}
 		});
 		
-		JButton boton_mis_listas = new JButton("        Mis Listas");
-		boton_mis_listas.setMargin(new Insets(2, 25, 2, 14));
-		boton_mis_listas.setOpaque(false);
-		boton_mis_listas.setRequestFocusEnabled(false);
-		boton_mis_listas.setHorizontalAlignment(SwingConstants.LEFT);
-		boton_mis_listas.setContentAreaFilled(false);
-		boton_mis_listas.setBorderPainted(false);
-		boton_mis_listas.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/umu/tds/AppVideo/Resources/LibraryIcon.png")));
-		boton_mis_listas.setForeground(Color.WHITE);
-		boton_mis_listas.setFont(new Font("Lato Black", Font.BOLD, 15));
-		boton_mis_listas.setBounds(0, 185, 206, 46);
-		panel_botones.add(boton_mis_listas);
+		//Botón mis listas con su evento
+		JButton botonMisListas = new JButton("        Mis Listas");
+		botonMisListas.setMargin(new Insets(2, 25, 2, 14));
+		botonMisListas.setOpaque(false);
+		botonMisListas.setRequestFocusEnabled(false);
+		botonMisListas.setHorizontalAlignment(SwingConstants.LEFT);
+		botonMisListas.setContentAreaFilled(false);
+		botonMisListas.setBorderPainted(false);
+		botonMisListas.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/umu/tds/AppVideo/Resources/LibraryIcon.png")));
+		botonMisListas.setForeground(Color.WHITE);
+		botonMisListas.setFont(new Font("Lato Black", Font.BOLD, 15));
+		botonMisListas.setBounds(0, 185, 206, 46);
+		panelBotones.add(botonMisListas);
 		
-		boton_mis_listas.addMouseListener(new MouseAdapter() {
-		    public void mouseEntered(MouseEvent evt) {
-		    	boton_mis_listas.setContentAreaFilled(true);
-		    	boton_mis_listas.setBackground(new Color(41,41,41));
+		botonMisListas.addMouseListener(new MouseAdapter() {
+
+			public void mouseEntered(MouseEvent evt) {
+		    	botonMisListas.setContentAreaFilled(true);
+		    	botonMisListas.setBackground(new Color(41,41,41));
 		    }
 
 		    public void mouseExited(MouseEvent evt) {
-		    	boton_mis_listas.setContentAreaFilled(false);		    
+		    	botonMisListas.setContentAreaFilled(false);		    
 		    }
 		    
 			public void mouseClicked(MouseEvent e) {
 				if(e.getButton()==MouseEvent.BUTTON1) {
-					CardLayout cl=(CardLayout)(panel_layout.getLayout());
-					comboBox.removeAllItems();
-					for (ListaVideos lista : Controlador.getUnicaInstancia().getListasVideosUsuario()) {
-						comboBox.addItem(lista.getNombre());
+					CardLayout cl=(CardLayout)(panelLayout.getLayout());
+					misListas.ActualizarListas();
+					cl.show(panelLayout, "mis_listas");
+				}
+			}
+		});
+		
+		//Botón recientes con su evento
+		JButton botonRecientes = new JButton("        Recientes");
+		botonRecientes.setMargin(new Insets(2, 25, 2, 14));
+		botonRecientes.setOpaque(false);
+		botonRecientes.setRequestFocusEnabled(false);
+		botonRecientes.setHorizontalAlignment(SwingConstants.LEFT);
+		botonRecientes.setContentAreaFilled(false);
+		botonRecientes.setBorderPainted(false);
+		botonRecientes.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/umu/tds/AppVideo/Resources/RecentsIcon.png")));
+		botonRecientes.setForeground(Color.WHITE);
+		botonRecientes.setFont(new Font("Lato Black", Font.BOLD, 15));
+		botonRecientes.setBounds(0, 230, 206, 46);
+		panelBotones.add(botonRecientes);
+		
+		botonRecientes.addMouseListener(new MouseAdapter() {
+		    public void mouseEntered(MouseEvent evt) {
+		    	botonRecientes.setContentAreaFilled(true);
+		    	botonRecientes.setBackground(new Color(41,41,41));
+		    }
+
+		    public void mouseExited(MouseEvent evt) {
+		    	botonRecientes.setContentAreaFilled(false);		    
+		    }
+		    
+			public void mouseClicked(MouseEvent e) {
+				if(e.getButton()==MouseEvent.BUTTON1) {
+					CardLayout cl=(CardLayout)(panelLayout.getLayout());
+					try {
+						recientes.mostrarListas();
+					} catch (DAOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
 					}
-					cl.show(panel_layout, "mis_listas");
+					cl.show(panelLayout, "recientes");
 				}
 			}
 		});
 		
-		JButton boton_Recientes = new JButton("        Recientes");
-		boton_Recientes.setMargin(new Insets(2, 25, 2, 14));
-		boton_Recientes.setOpaque(false);
-		boton_Recientes.setRequestFocusEnabled(false);
-		boton_Recientes.setHorizontalAlignment(SwingConstants.LEFT);
-		boton_Recientes.setContentAreaFilled(false);
-		boton_Recientes.setBorderPainted(false);
-		boton_Recientes.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/umu/tds/AppVideo/Resources/RecentsIcon.png")));
-		boton_Recientes.setForeground(Color.WHITE);
-		boton_Recientes.setFont(new Font("Lato Black", Font.BOLD, 15));
-		boton_Recientes.setBounds(0, 230, 206, 46);
-		panel_botones.add(boton_Recientes);
+		//Botón nueva listas con su evento
+		JButton botonNuevaLista = new JButton("        Nueva Lista");
+		botonNuevaLista.setMargin(new Insets(2, 25, 2, 14));
+		botonNuevaLista.setOpaque(false);
+		botonNuevaLista.setRequestFocusEnabled(false);
+		botonNuevaLista.setHorizontalAlignment(SwingConstants.LEFT);
+		botonNuevaLista.setContentAreaFilled(false);
+		botonNuevaLista.setBorderPainted(false);
+		botonNuevaLista.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/umu/tds/AppVideo/Resources/NewListIcon.png")));
+		botonNuevaLista.setForeground(Color.WHITE);
+		botonNuevaLista.setFont(new Font("Lato Black", Font.BOLD, 15));
+		botonNuevaLista.setBounds(0, 275, 206, 46);
+		panelBotones.add(botonNuevaLista);
 		
-		boton_Recientes.addMouseListener(new MouseAdapter() {
+		botonNuevaLista.addMouseListener(new MouseAdapter() {
 		    public void mouseEntered(MouseEvent evt) {
-		    	boton_Recientes.setContentAreaFilled(true);
-		    	boton_Recientes.setBackground(new Color(41,41,41));
+		    	botonNuevaLista.setContentAreaFilled(true);
+		    	botonNuevaLista.setBackground(new Color(41,41,41));
 		    }
 
 		    public void mouseExited(MouseEvent evt) {
-		    	boton_Recientes.setContentAreaFilled(false);		    
+		    	botonNuevaLista.setContentAreaFilled(false);		    
 		    }
 		    
 			public void mouseClicked(MouseEvent e) {
 				if(e.getButton()==MouseEvent.BUTTON1) {
-					CardLayout cl=(CardLayout)(panel_layout.getLayout());
-					cl.show(panel_layout, "recientes");
+					CardLayout cl=(CardLayout)(panelLayout.getLayout());
+					cl.show(panelLayout, "crear_listas");
 				}
 			}
 		});
 		
-		JButton boton_Nueva_Lista = new JButton("        Nueva Lista");
-		boton_Nueva_Lista.setMargin(new Insets(2, 25, 2, 14));
-		boton_Nueva_Lista.setOpaque(false);
-		boton_Nueva_Lista.setRequestFocusEnabled(false);
-		boton_Nueva_Lista.setHorizontalAlignment(SwingConstants.LEFT);
-		boton_Nueva_Lista.setContentAreaFilled(false);
-		boton_Nueva_Lista.setBorderPainted(false);
-		boton_Nueva_Lista.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/umu/tds/AppVideo/Resources/NewListIcon.png")));
-		boton_Nueva_Lista.setForeground(Color.WHITE);
-		boton_Nueva_Lista.setFont(new Font("Lato Black", Font.BOLD, 15));
-		boton_Nueva_Lista.setBounds(0, 275, 206, 46);
-		panel_botones.add(boton_Nueva_Lista);
-		
-		boton_Nueva_Lista.addMouseListener(new MouseAdapter() {
-		    public void mouseEntered(MouseEvent evt) {
-		    	boton_Nueva_Lista.setContentAreaFilled(true);
-		    	boton_Nueva_Lista.setBackground(new Color(41,41,41));
-		    }
-
-		    public void mouseExited(MouseEvent evt) {
-		    	boton_Nueva_Lista.setContentAreaFilled(false);		    
-		    }
-		    
-			public void mouseClicked(MouseEvent e) {
-				if(e.getButton()==MouseEvent.BUTTON1) {
-					CardLayout cl=(CardLayout)(panel_layout.getLayout());
-					cl.show(panel_layout, "crear_listas");
-				}
-			}
-		});
-		
-		JButton boton_Logout = new JButton("CERRAR SESION");
-		boton_Logout.setBorder(null);
-		boton_Logout.setBorderPainted(false);
-		boton_Logout.setHorizontalTextPosition(SwingConstants.CENTER);
-		boton_Logout.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/umu/tds/AppVideo/Resources/Logout.png")));
-		boton_Logout.setRolloverEnabled(true);
-		boton_Logout.setRolloverIcon(new ImageIcon(VentanaPrincipal.class.getResource("/umu/tds/AppVideo/Resources/LogoutHover.png")));
-		boton_Logout.setFont(new Font("Lato Black", Font.BOLD, 15));
-		boton_Logout.setForeground(Color.BLACK);
-		boton_Logout.setContentAreaFilled(false);
-		boton_Logout.setFocusPainted(false);
-		boton_Logout.setBounds(19, 548, 169, 58);
-		panel_botones.add(boton_Logout);
-		boton_Logout.addActionListener(new ActionListener(){
+		//Botón cerrar sesión con su evento
+		JButton botonLogout = new JButton("CERRAR SESION");
+		botonLogout.setBorder(null);
+		botonLogout.setBorderPainted(false);
+		botonLogout.setHorizontalTextPosition(SwingConstants.CENTER);
+		botonLogout.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/umu/tds/AppVideo/Resources/Logout.png")));
+		botonLogout.setRolloverEnabled(true);
+		botonLogout.setRolloverIcon(new ImageIcon(VentanaPrincipal.class.getResource("/umu/tds/AppVideo/Resources/LogoutHover.png")));
+		botonLogout.setFont(new Font("Lato Black", Font.BOLD, 15));
+		botonLogout.setForeground(Color.BLACK);
+		botonLogout.setContentAreaFilled(false);
+		botonLogout.setFocusPainted(false);
+		botonLogout.setBounds(19, 548, 169, 58);
+		panelBotones.add(botonLogout);
+		botonLogout.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
 				Login login = new Login();
 				login.mostarVentana();
@@ -719,7 +352,7 @@ public class VentanaPrincipal extends JFrame {
 		Luz luz = new Luz();
 		luz.color = Color.YELLOW;
 		luz.setBounds(53, 385, 99, 102);
-		panel_botones.add(luz);
+		panelBotones.add(luz);
 		
 		luz.addEncendidoListener(new IEncendidoListener() {
 			public void enteradoCambioEncendido(EventObject evt) {
@@ -728,61 +361,62 @@ public class VentanaPrincipal extends JFrame {
 					selectorArchivos.showOpenDialog(selectorArchivos);
 					File archivo_xml = selectorArchivos.getSelectedFile(); // obtiene el archivo seleccionado
 					Controlador.getUnicaInstancia().cargarVideos(archivo_xml);
+					panelExplorar.ActualizarEtiquetas();
 				}
 					
 			}
 		});
-				
-		JButton boton_Cerrar = new JButton("");
-		boton_Cerrar.setIcon(new ImageIcon(Login.class.getResource("/umu/tds/AppVideo/Resources/Close button.png")));
-		boton_Cerrar.setBackground(Color.BLACK);
-		boton_Cerrar.setForeground(Color.WHITE);
-		boton_Cerrar.setFont(new Font("Dialog", Font.BOLD, 30));
-		boton_Cerrar.setBorder(null);
-		boton_Cerrar.setBounds(1240, 0, 40, 26);
-		boton_Cerrar.setFocusable(false);
-		getContentPane().add(boton_Cerrar);
 		
-		boton_Cerrar.addMouseListener(new MouseAdapter(){
+		//Botón cerrar con su evento para cerra
+		JButton botonCerrar = new JButton("");
+		botonCerrar.setIcon(new ImageIcon(Login.class.getResource("/umu/tds/AppVideo/Resources/Close button.png")));
+		botonCerrar.setBackground(Color.BLACK);
+		botonCerrar.setForeground(Color.WHITE);
+		botonCerrar.setFont(new Font("Dialog", Font.BOLD, 30));
+		botonCerrar.setBorder(null);
+		botonCerrar.setBounds(1240, 0, 40, 26);
+		botonCerrar.setFocusable(false);
+		getContentPane().add(botonCerrar);
+		
+		botonCerrar.addMouseListener(new MouseAdapter(){
 			public void mouseClicked(MouseEvent evento) {
 				if(evento.getButton()==MouseEvent.BUTTON1)
 					System.exit(0);
 			}
 			public void mouseEntered(MouseEvent evt) {
-				boton_Cerrar.setContentAreaFilled(true);
-				boton_Cerrar.setBackground(new Color(41,41,41));
+				botonCerrar.setContentAreaFilled(true);
+				botonCerrar.setBackground(new Color(41,41,41));
 		    }
 
 		    public void mouseExited(MouseEvent evt) {
-				boton_Cerrar.setContentAreaFilled(false);		    
+				botonCerrar.setContentAreaFilled(false);		    
 		    }
 		});
 		
+		//Botón para minimizar la ventana principal
+		JButton botonMinimizar = new JButton("");
+		botonMinimizar.setIcon(new ImageIcon(Login.class.getResource("/umu/tds/AppVideo/Resources/Minimize.png")));
+		botonMinimizar.setForeground(Color.WHITE);
+		botonMinimizar.setFont(new Font("Dialog", Font.BOLD, 30));
+		botonMinimizar.setFocusable(false);
+		botonMinimizar.setBorder(null);
+		botonMinimizar.setBackground(Color.BLACK);
+		botonMinimizar.setBounds(1200, 0, 40, 26);
+		getContentPane().add(botonMinimizar);
 		
-		
-		JButton boton_Minimizar = new JButton("");
-		boton_Minimizar.setIcon(new ImageIcon(Login.class.getResource("/umu/tds/AppVideo/Resources/Minimize.png")));
-		boton_Minimizar.setForeground(Color.WHITE);
-		boton_Minimizar.setFont(new Font("Dialog", Font.BOLD, 30));
-		boton_Minimizar.setFocusable(false);
-		boton_Minimizar.setBorder(null);
-		boton_Minimizar.setBackground(Color.BLACK);
-		boton_Minimizar.setBounds(1200, 0, 40, 26);
-		getContentPane().add(boton_Minimizar);
-		
-		boton_Minimizar.addMouseListener(new MouseAdapter(){
+		botonMinimizar.addMouseListener(new MouseAdapter(){
 			public void mouseClicked(MouseEvent evento) {
 				if(evento.getButton()==MouseEvent.BUTTON1)
 					setState(JFrame.ICONIFIED);
 			}
 			
 			public void mouseEntered(MouseEvent evt) {
-				boton_Minimizar.setContentAreaFilled(true);
-				boton_Minimizar.setBackground(new Color(41,41,41));
+				botonMinimizar.setContentAreaFilled(true);
+				botonMinimizar.setBackground(new Color(41,41,41));
 		    }
 
 		    public void mouseExited(MouseEvent evt) {
-				boton_Minimizar.setContentAreaFilled(false);		    
+				botonMinimizar.setContentAreaFilled(false);		    
 		    }
 		});
 		
@@ -815,7 +449,6 @@ public class VentanaPrincipal extends JFrame {
 				});
 
 	}
-	//TODO: Metodo de reproduccion de videos
 	
 	public static VideoWeb getVideoWeb() {
 		return vWeb;

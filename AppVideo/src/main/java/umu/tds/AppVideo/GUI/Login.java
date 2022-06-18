@@ -20,6 +20,8 @@ public class Login extends JFrame {
 	private JPasswordField pwdPassword;
 	
 	public Login() {
+		
+		
 		setBounds(new Rectangle(100, 100, 1280, 720));
 		setLocationRelativeTo(null);
 		setUndecorated(true);
@@ -35,13 +37,14 @@ public class Login extends JFrame {
 		panel.setLayout(null);
 		panel.setOpaque(false);
 		
-		
+		//Campo de contraseña
 		JLabel lblNewLabel_1 = new JLabel("Password");
 		lblNewLabel_1.setForeground(Color.WHITE);
 		lblNewLabel_1.setFont(new Font("Lato", Font.BOLD, 13));
 		lblNewLabel_1.setBounds(734, 417, 66, 14);
 		panel.add(lblNewLabel_1);
 		
+		//Botón con evento que pasa a la ventana de registro
 		JButton btnSignUp = new JButton("Sign up");
 		btnSignUp.addMouseListener(new MouseAdapter() {
 			@Override
@@ -63,17 +66,18 @@ public class Login extends JFrame {
 		btnSignUp.setBounds(978, 479, 180, 64);
 		panel.add(btnSignUp);
 		
-		JButton btnNewButton = new JButton("Login");
-		btnNewButton.setMargin(new Insets(20, 2, 20, 2));
-		btnNewButton.setBorderPainted(false);
-		btnNewButton.setHorizontalTextPosition(SwingConstants.CENTER);
-		btnNewButton.setFont(new Font("Lato", Font.BOLD, 17));
-		btnNewButton.setBorder(null);
-		btnNewButton.setBackground(new Color(0, 153, 255));
-		btnNewButton.setBounds(759, 479, 180, 64);
-		btnNewButton.setFocusable(false);
-		panel.add(btnNewButton);
-		btnNewButton.addMouseListener(new MouseAdapter() {
+		//Botón con evento para autentificarse
+		JButton botonLogin = new JButton("Login");
+		botonLogin.setMargin(new Insets(20, 2, 20, 2));
+		botonLogin.setBorderPainted(false);
+		botonLogin.setHorizontalTextPosition(SwingConstants.CENTER);
+		botonLogin.setFont(new Font("Lato", Font.BOLD, 17));
+		botonLogin.setBorder(null);
+		botonLogin.setBackground(new Color(0, 153, 255));
+		botonLogin.setBounds(759, 479, 180, 64);
+		botonLogin.setFocusable(false);
+		panel.add(botonLogin);
+		botonLogin.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if(e.getButton()==MouseEvent.BUTTON1) {
@@ -95,6 +99,8 @@ public class Login extends JFrame {
 			}
 		});
 		
+		
+		//Botón con evento para cerrar la ventana
 		JButton boton_X = new JButton("");
 		boton_X.setIcon(new ImageIcon(Login.class.getResource("/umu/tds/AppVideo/Resources/Close button.png")));
 		boton_X.setBackground(Color.BLACK);
@@ -121,7 +127,7 @@ public class Login extends JFrame {
 		});
 		
 		
-		
+		//Botón con evento para minimizar la ventana
 		JButton boton_Minimizar = new JButton("");
 		boton_Minimizar.setIcon(new ImageIcon(Login.class.getResource("/umu/tds/AppVideo/Resources/Minimize.png")));
 		boton_Minimizar.setForeground(Color.WHITE);

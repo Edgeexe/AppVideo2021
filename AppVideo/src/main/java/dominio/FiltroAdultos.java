@@ -1,5 +1,9 @@
 package dominio;
 
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.ZoneId;
+
 public class FiltroAdultos implements Filtro {
 
 	int codigo;
@@ -25,8 +29,9 @@ public class FiltroAdultos implements Filtro {
 
 	@Override
 	public boolean esVideoOk(Video video, Usuario usuario) {
-		// TODO Auto-generated method stub
-		return false;
+		Period años=Period.between(usuario.getFecha().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), LocalDate.now());
+		if(años.getYears()>=18) return true;
+		else return !video.getEtiquetas().contains(new Etiqueta("Adulto"));
 	}
 
 }

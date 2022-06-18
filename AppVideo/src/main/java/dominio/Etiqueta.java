@@ -4,9 +4,11 @@ import java.util.Objects;
 
 public class Etiqueta {
 	
+	private int codigo;
 	private String etiqueta;
 	
 	public Etiqueta(String etiqueta) {
+		codigo=0;
 		this.etiqueta = etiqueta;
 	}
 
@@ -31,6 +33,14 @@ public class Etiqueta {
 			return false;
 		Etiqueta other = (Etiqueta) obj;
 		return Objects.equals(etiqueta, other.etiqueta);
+	}
+
+	public int getCodigo() {
+		return codigo;
+	}
+	
+	public void setCodigo(int codigo) {
+		this.codigo=codigo;
 	}
 		
 
