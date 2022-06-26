@@ -48,7 +48,7 @@ public class VentanaPrincipal extends JFrame {
 	private int posX=0;
 	private int	posY=0;
 
-	private static VideoWeb vWeb = new VideoWeb();
+	private static VideoWeb vWeb;
 
 	private static PanelMisLIstas misListas;
 	private static PanelExplorar panelExplorar;
@@ -57,6 +57,8 @@ public class VentanaPrincipal extends JFrame {
 	
 
 	public VentanaPrincipal() throws DAOException {
+		
+		vWeb=new VideoWeb();
 		
 		//array para añadir a las opciones de seleccionar un filtro
 		String[] filtros= {"No Filtro","Filtro Adulto","Filtro Mis Listas"};
